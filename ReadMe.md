@@ -1178,6 +1178,5 @@ This is our step by step instructions for the TIL dbt essentials training
 
     <details>
     <summary>solution.csv contents</summary>
-    [solution.csv](files/solution.csv)
+    [solution.csv](TheInformationLab/dbtEssentialsGuide/files/solution.csv)
     </details>
-    
