@@ -1,6 +1,13 @@
 # dbt Essentials Guide
 This is our step by step instructions for the TIL dbt essentials training
 
+[Getting started with dbt Cloud](#getting-started-with-dbt-cloud)
+
+[Testing & Debugging](#testing--debugging)
+
+[Incremental Models](#incremental-models)
+
+
 ## Getting started with dbt Cloud
 
 1. Click "Initialize dbt project" in version control
@@ -966,7 +973,8 @@ This is our step by step instructions for the TIL dbt essentials training
               - positive_late_fees
     ```
   
-  (full schema.yml):
+    <details>
+    <summary>full schema.yml</summary>
 
     ```yml
     version: 2
@@ -1018,6 +1026,8 @@ This is our step by step instructions for the TIL dbt essentials training
             data_tests:
               - positive_late_fees
     ```
+    </details>
+
 
 31. In the command bar, run the command
 
@@ -1073,7 +1083,8 @@ This is our step by step instructions for the TIL dbt essentials training
               - cust_late_fees_1_row_per_cust
     ```
 
-    (full schema.yml):
+    <details>
+    <summary>full schema.yml</summary>
 
     ```yml
     version: 2
@@ -1131,6 +1142,7 @@ This is our step by step instructions for the TIL dbt essentials training
               - no_digits_in_column
               - cust_late_fees_1_row_per_cust
     ```
+    </details>
 
 34. In the command bar, run the command
 
@@ -1138,7 +1150,9 @@ This is our step by step instructions for the TIL dbt essentials training
     dbt test --select customers_with_late_fees
     ```
     To test the customers_with_late_fees model. See how the 2 tests are applied.
+
 </details> 
+
 
 35. Create a file in the root directory called packages.yml ("/packages.yml")
 
@@ -1164,5 +1178,5 @@ This is our step by step instructions for the TIL dbt essentials training
 
     <details>
     <summary>solution.csv contents</summary>
-    [solution.csv](./files/solution.csv)
+    [solution.csv](files/solution.csv)
     </details>
