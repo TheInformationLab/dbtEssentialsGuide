@@ -31,9 +31,9 @@ This is our step by step instructions for the TIL dbt essentials training
     ```
     to create all models in our data warehouse
 
-5. Make a new folder "models/lego"
+5. Make a new folder lego within the models directory ("/models/lego")
 
-6. Update dbt_project.yml lines 38-43 to materialise all models in the lego directory as tables by default
+6. Update dbt_project.yml lines 38-43 to materialize all models in the lego directory as tables by default
 
     ```yaml
     models:
@@ -89,6 +89,40 @@ This is our step by step instructions for the TIL dbt essentials training
     ```sql
     GROUP BY 1,2,3,4
     ```
+
+    <details>
+    <summary>Full sql</summary>
+
+    ```sql
+    WITH UNIQUE_PARTS AS (
+    SELECT 
+        P.part_num
+    FROM dbt_course.lego.parts as P
+    INNER JOIN dbt_course.lego.inventory_parts as IP on P.part_num = IP.part_num
+    INNER JOIN dbt_course.lego.inventories as I on I.id = IP.inventory_id
+    INNER JOIN dbt_course.lego.sets as S on S.set_num = I.set_num
+        GROUP BY P.part_num
+        HAVING COUNT(*) = 1
+    )
+    SELECT 
+        T.name as theme_name,
+        S.name as set_name,
+        S.year as set_year,
+        CASE 
+            WHEN UP.part_num IS NULL THEN 'Not Unique' 
+            ELSE 'Unique' 
+        END as unique_part,
+        COUNT(P.part_num) as parts
+    FROM dbt_course.lego.parts as P
+    LEFT JOIN UNIQUE_PARTS as UP on P.part_num = UP.part_num
+    INNER JOIN dbt_course.lego.inventory_parts as IP on P.part_num = IP.part_num
+    INNER JOIN dbt_course.lego.inventories as I on I.id = IP.inventory_id
+    INNER JOIN dbt_course.lego.sets as S on S.set_num = I.set_num
+    INNER JOIN dbt_course.lego.themes as T on T.id = S.theme_id
+    GROUP BY 1,2,3,4
+    ````
+
+    </details>
 
 10. In the command bar, run the command
 
@@ -160,7 +194,7 @@ This is our step by step instructions for the TIL dbt essentials training
         HAVING COUNT(*) = 1
     ```
 
-15. Add a config block to the top of unique_parts.sql to materialise it as a view in the data warehouse
+15. Add a config block to the top of unique_parts.sql to materialize it as a view in the data warehouse
 
     ```sql
     {{
@@ -525,7 +559,7 @@ This is our step by step instructions for the TIL dbt essentials training
     discount_applied,
     ROUND(SUM(fee_applied),2) as fee_to_pay
     FROM CTE
-    GROUP BY 1,3;
+    GROUP BY 1,3
     ```
 
 4. Create a schema.yml file in the library_loans directory ("/models/library_loans/schema.yml") and copy/paste into it the yaml from the starter file schema.yml
@@ -545,7 +579,7 @@ This is our step by step instructions for the TIL dbt essentials training
     ```
     This will create our sources for dbt to reference
 
-5. Update the models section of the dbt_project.yml file (lines 38-45) to materialise everything in library_loans as a table by default
+5. Update the models section of the dbt_project.yml file (lines 38-45) to materialize everything in library_loans as a table by default
 
     ```yml
     models:
@@ -582,7 +616,7 @@ This is our step by step instructions for the TIL dbt essentials training
     discount_applied,
     ROUND(SUM(fee_applied),2) as fee_to_pay
     FROM CTE
-    GROUP BY 1,3;
+    GROUP BY 1,3
     ```
 
 7. Add data tests to our 4 sources:
@@ -595,6 +629,8 @@ This is our step by step instructions for the TIL dbt essentials training
     - only 'Gold', 'Silver' and 'Bronze'
   - loans.Loan_id
     - not null
+
+
 
     ```yml
     version: 2
