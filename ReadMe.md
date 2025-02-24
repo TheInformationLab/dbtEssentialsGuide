@@ -1036,51 +1036,121 @@ This is our step by step instructions for the TIL dbt essentials training
     ```
     To test the customer_withdrawals model. See how the positive_late_fees test is applied.
 
-<details>
 
-<summary>Optional steps</summary>
+32. Create a file in the root directory called packages.yml ("/packages.yml")
 
-32. Create no_digits_in_column.sql and cust_late_fees_1_row_per_cust.sql files in the generic folder ("/tests/generic/no_digits_in_column.sql" and "/tests/generic/cust_late_fees_1_row_per_cust.sql"). Paste in the SQL code from the starter files no_digits_in_column.sql and cust_late_fees_1_row_per_cust.sql
+33. Copy the install yaml from [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) into the packages.yml
 
-    no_digits_in_column:
+    ```yml
+    packages:
+      - package: dbt-labs/dbt_utils
+        version: 1.3.0
+    ```
+    (n.b. your version may vary)
 
-    ```SQL
-    {% test no_digits_in_column(model, column_name)%}
-        SELECT *
-        FROM {{ model }}
-        WHERE {{ column_name }} LIKE '%0%'
-        OR {{ column_name }} LIKE '%1%'
-        OR {{ column_name }} LIKE '%2%'
-        OR {{ column_name }} LIKE '%3%'
-        OR {{ column_name }} LIKE '%4%'
-        OR {{ column_name }} LIKE '%5%'
-        OR {{ column_name }} LIKE '%6%'
-        OR {{ column_name }} LIKE '%7%'
-        OR {{ column_name }} LIKE '%8%'
-        OR {{ column_name }} LIKE '%9%'
-    {% endtest %}
+34. In the command bar, run the command
+
+    ```sh
+    dbt deps
+    ```
+    To install the dbt_utils package
+
+35. Create solution.csv in the seeds folder ("/seeds/solution.csv")
+
+36. Open the starter file solution.csv **in a text editor** and copy paste the contents into /seeds/solution.csv
+
+    <details>
+    <summary>solution.csv contents</summary>
+
+    [solution.csv](/files/solution.csv)
+
+    </details>
+
+37. Update the schema.yml file in the library_loans folder ("/models/library_loans/schema.yml") to add a seeds section to the end of the file with solution named.
+
+    ```yml
+    seeds:
+      - name: solution
     ```
 
-    cust_late_fees_1_row_per_cust:
+    <details>
+    <summary>full schema.yml</summary>
 
-    ```SQL
-    {% test cust_late_fees_1_row_per_cust(model, column_name)%}
-        SELECT {{ column_name }}
-        FROM {{ model }}
-        GROUP BY {{ column_name }}
-        HAVING COUNT(DISTINCT {{ column_name }}) > 1
-    {% endtest %}
+    ```yml
+    version: 2
+    
+    sources:
+      - name: library
+        database: dbt_course
+        schema: library_loans
+        tables:
+          - name: books_factual
+          - name: books_fictional
+          - name: loans
+          - name: members
+    
+    models:
+      - name: stg_members
+        columns:
+          - name: member_id
+            data_tests:
+              - not_null
+          - name: membership_tier
+            data_tests:
+              - accepted_values:
+                  values: ['Bronze','Silver','Gold']
+      - name: stg_books
+        columns:
+              - name: book_id
+                data_tests:
+                  - unique
+                  - not_null
+      - name: stg_loans
+        columns:
+          - name: loan_id
+            data_tests:
+              - not_null
+          - name: book_id
+            data_tests:
+              - relationships:
+                  to: ref('stg_books')
+                  field: book_id
+          - name: member_id
+            data_tests:
+              - relationships:
+                  to: ref('stg_members')
+                  field: member_id
+      - name: customer_withdrawals
+        columns:
+          - name: fee_applied
+            data_tests:
+              - positive_late_fees
+
+    seeds:
+      - name: solution
     ```
+    </details>
 
-33. Update the schema.yml file to apply both new tests to the member_name column in the customers_with_late_fees model. 
+38. In the command bar, run the command
+
+    ```sh
+    dbt seed
+    ```
+    To load the seed file into the data warehouse
+
+39. Update the schema.yml file in the library_loans folder ("/models/library_loans/schema.yml") to add the [dbt_utils.equal_rowcount](https://github.com/dbt-labs/dbt-utils/tree/1.3.0/#equal_rowcount-source) test to the customers_with_late_fees model comparing to the solution seed. Also add an [accepted_range test](https://github.com/dbt-labs/dbt-utils/tree/1.3.0/#accepted_range-source) on the discount_applied column to check it's between 0 and 25%
 
     ```yml
       - name: customers_with_late_fees
+        data_tests:
+          - dbt_utils.equal_rowcount:
+              compare_model: ref('solution')
         columns:
-          - name: member_name
+          - name: discount_applied
             data_tests:
-              - no_digits_in_column
-              - cust_late_fees_1_row_per_cust
+              - dbt_utils.accepted_range:
+                  min_value: 0
+                  max_value: 0.25
     ```
 
     <details>
@@ -1136,49 +1206,224 @@ This is our step by step instructions for the TIL dbt essentials training
             data_tests:
               - positive_late_fees
       - name: customers_with_late_fees
+        data_tests:
+          - dbt_utils.equal_rowcount:
+              compare_model: ref('solution')
         columns:
-          - name: member_name
+          - name: discount_applied
             data_tests:
-              - no_digits_in_column
-              - cust_late_fees_1_row_per_cust
+              - dbt_utils.accepted_range:
+                  min_value: 0
+                  max_value: 0.25
+    
+    seeds:
+      - name: solution
     ```
     </details>
 
-34. In the command bar, run the command
+40. In the command bar, run the command
 
     ```sh
     dbt test --select customers_with_late_fees
     ```
-    To test the customers_with_late_fees model. See how the 2 tests are applied.
+    To see these tests running (and passing) against the customers_with_late_fees model
 
-</details> 
-
-
-35. Create a file in the root directory called packages.yml ("/packages.yml")
-
-36. Copy the install yaml from [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) into the packages.yml
-
-    ```yml
-    packages:
-      - package: dbt-labs/dbt_utils
-        version: 1.3.0
-    ```
-    (n.b. your version may vary)
-
-37. In the command bar, run the command
+41. In the command bar, run the command
 
     ```sh
-    dbt deps
+    dbt build --select library_loans
     ```
-    To install the dbt_utils package
+    To make and test all the library_loans models. All tests should pass
 
-38. Create solution.csv in the seeds folder ("/seeds/solution.csv")
 
-39. Open the starter file solution.csv **in a text editor** and copy paste the contents into /seeds/solution.csv
+## Incremental Models
+
+1. Create a new file called fetch_weather.sql in the macros folder ("/macros/fetch_weather.sql").
+
+2. Copy in the sql from the starter file fetch_weather.sql
+
+    ```sql
+    {% macro fetch_weather() %}
+        {% do run_query("CALL DBT_COURSE.WEATHER.DBT_FETCH_WEATHER('"+ target.schema +"');")%}
+    {% endmacro %}
+    ```
+    This runs the dbt_fetch_weather() procedure and produces its table in the schema in which we're working
+
+3. Make a new folder in the models directory called office_weather ("/models/office_weather")
+
+4. Create a schema.yml file in the office_weather directory ("/models/office_weather/schema.yml") and copy/paste into it the yaml from the starter file schema.yml
+
+    ```yml
+    version: 2
+    
+    sources:
+      - name: office_weather
+        schema: "{{target.schema}}"
+        tables:
+          - name: weather_readings
+    
+    models:
+      - name: stg_weather_data
+    ```
+
+5. Create stg_weather_data.sql in the office_weather directory ("/models/office_weather/stg_weather_data.sql")
+
+6. Into stg_weather_data.sql ("/models/office_weather/stg_weather_data.sql") write the following query to stage our source weather_reading data
+
+    ```SQL
+    select *
+    from {{ source('office_weather', 'weather_readings') }}
+    ```
+
+7. Update the dbt_project.yml file ("/dbt_project.yml") to add an on-run-start hook in line 27 to call the fetch_weather() macro before all runs. Also materialize everything in the office_weather folder as a view by default
+
+    ```yml
+    on-run-start: 
+          - "{{ fetch_weather() }}"
+        
+
+    models:
+      my_new_project:
+        # Applies to all files under models/example/
+        example:
+          +materialized: table
+    
+        lego:
+          +materialized: table
+    
+        library_loans:
+          +materialized: table
+
+        office_weather:
+          +materialized: view
+    ```
+
 
     <details>
-    <summary>solution.csv contents</summary>
+    <summary>full dbt_project.yml</summary>
 
-    [solution.csv](/files/solution.csv)
+    ```yml
+    # Name your project! Project names should contain only lowercase characters
+    # and underscores. A good package name should reflect your organization's
+    # name or the intended use of these models
+    name: 'my_new_project'
+    version: '1.0.0'
+    config-version: 2
+    
+    # This setting configures which "profile" dbt uses for this project.
+    profile: 'default'
+    
+    # These configurations specify where dbt should look for different types of files.
+    # The `model-paths` config, for example, states that models in this project can be
+    # found in the "models/" directory. You probably won't need to change these!
+    model-paths: ["models"]
+    analysis-paths: ["analyses"]
+    test-paths: ["tests"]
+    seed-paths: ["seeds"]
+    macro-paths: ["macros"]
+    snapshot-paths: ["snapshots"]
+    
+    target-path: "target"  # directory which will store compiled SQL files
+    clean-targets:         # directories to be removed by `dbt clean`
+      - "target"
+      - "dbt_packages"
+    
+    on-run-start: 
+      - "{{ fetch_weather() }}"
+    
+    
+    # Configuring models
+    # Full documentation: https://docs.getdbt.com/docs/configuring-models
+    
+    # In dbt, the default materialization for a model is a view. This means, when you run 
+    # dbt run or dbt build, all of your models will be built as a view in your data platform. 
+    # The configuration below will override this setting for models in the example folder to 
+    # instead be materialized as tables. Any models you add to the root of the models folder will 
+    # continue to be built as views. These settings can be overridden in the individual model files
+    # using the `{{ config(...) }}` macro.
+    
+    models:
+      my_new_project:
+        # Applies to all files under models/example/
+        example:
+          +materialized: table
+    
+        lego:
+          +materialized: table
+    
+        library_loans:
+          +materialized: table
+
+        office_weather:
+          +materialized: view
+    ```
 
     </details>
+
+8. In the command bar, run the command
+
+    ```sh
+    dbt build --select office_weather
+    ```
+    To run our macro and then make our staging model in the data warehouse
+
+9. Create a new file within the office_weather directory called all_weather_data.sql ("/models/office_weather/all_weather_data.sql")
+
+10. Update all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to select from the stg_weather_data model
+
+    ```sql
+    select *
+    from {{ ref('stg_weather_data') }}
+    ```
+
+11. Configure all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to be an incremental model by adding a config block to the start of the file. Specify that the combination of office and time is what conveys uniqueness
+
+    ```sql
+    {{
+        config(
+            materialized='incremental',
+            unique_key=['office','time']
+        )
+    }}
+    select *
+    from {{ ref('stg_weather_data') }}
+    ```
+
+12. Update all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to include an is_incremental block to compare the time field to the maximum value of the time field from its prior state
+
+    ```sql
+    {{
+        config(
+            materialized='incremental',
+            unique_key=['office','time']
+        )
+    }}
+    select *
+    from {{ ref('stg_weather_data') }}
+    
+    {% if is_incremental() %}
+        -- this filter will only be applied on an incremental run
+        where time > (select max(time) from {{ this }}) 
+    {% endif %}
+    ```
+
+13. In the command bar, run the command
+
+    ```sh
+    dbt build --select office_weather
+    ```
+    To make all our office_weather models. stg_weather_data and all_weather_data should both be built.
+
+14. In the command bar, run the command
+
+    ```sh
+    dbt build --select all_weather_data
+    ```
+    To make the all_weather_data model in the data warehouse. You should see the incremental where clause present in the logs.
+
+15. In the command bar, run the command
+
+    ```sh
+    dbt build --select all_weather_data --full-refresh
+    ```
+    To make the all_weather_data model in the data warehouse. Now you should not see the incremental where clause in the logs.
