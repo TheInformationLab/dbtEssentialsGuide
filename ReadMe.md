@@ -987,26 +987,26 @@ This is our step by step instructions for the TIL dbt essentials training
 
 27. Create a folder within the tests folder called generic ("/tests/generic")
 
-28. In the generic tests folder, create a sql file called positive_late_fees.sql ("/tests/generic/positive_late_fees.sql")
+28. In the generic tests folder, create a sql file called no_negative_values.sql ("/tests/generic/no_negative_values.sql")
 
-29. Copy into the positive_late_fees.sql file the contents of the starter file positive_late_fees.sql
+29. Copy into the no_negative_values.sql file the contents of the starter file no_negative_values.sql
 
     ```sql
-    {% test positive_late_fees(model, column_name)%}
+    {% test no_negative_values(model, column_name)%}
         SELECT *
         FROM {{model}}
         WHERE {{column_name}} < 0
     {% endtest %}
     ```
 
-30. Update the schema.yml file in the library_loans folder ("/models/library_loans/schema.yml") to apply the positive_late_fees test to the fee_applied column of the customer_withdrawals model at the end of the file.
+30. Update the schema.yml file in the library_loans folder ("/models/library_loans/schema.yml") to apply the no_negative_values test to the fee_applied column of the customer_withdrawals model at the end of the file.
 
     ```yml
       - name: customer_withdrawals
         columns:
           - name: fee_applied
             data_tests:
-              - positive_late_fees
+              - no_negative_values
     ```
   
     <details>
@@ -1060,7 +1060,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: fee_applied
             data_tests:
-              - positive_late_fees
+              - no_negative_values
     ```
     </details>
 
@@ -1070,7 +1070,7 @@ This is our step by step instructions for the TIL dbt essentials training
     ```sh
     dbt test --select customer_withdrawals
     ```
-    To test the customer_withdrawals model. See how the positive_late_fees test is applied.
+    To test the customer_withdrawals model. See how the no_negative_values test is applied.
 
 
 32. Create a file in the root directory called packages.yml ("/packages.yml")
@@ -1160,7 +1160,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: fee_applied
             data_tests:
-              - positive_late_fees
+              - no_negative_values
 
     seeds:
       - name: solution
@@ -1240,7 +1240,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: fee_applied
             data_tests:
-              - positive_late_fees
+              - no_negative_values
       - name: customers_with_late_fees
         data_tests:
           - dbt_utils.equal_rowcount:
