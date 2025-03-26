@@ -1327,6 +1327,9 @@ This is our step by step instructions for the TIL dbt essentials training
 
    models:
      - name: stg_weather_data
+       config:
+         pre_hook:
+           - "{{ fetch_weather() }}"
    ```
 
 5. Create stg_weather_data.sql in the office_weather directory ("/models/office_weather/stg_weather_data.sql")
@@ -1338,12 +1341,9 @@ This is our step by step instructions for the TIL dbt essentials training
    from {{ source('office_weather', 'weather_readings') }}
    ```
 
-7. Update the dbt_project.yml file ("/dbt_project.yml") to add an on-run-start hook in line 27 to call the fetch_weather() macro before all runs. Also materialize everything in the office_weather folder as a view by default
+7. Update the dbt_project.yml file ("/dbt_project.yml") to materialize everything in the office_weather folder as a view by default
 
    ```yml
-   on-run-start:
-     - "{{ fetch_weather() }}"
-
    models:
      my_new_project:
        # Applies to all files under models/example/
@@ -1388,9 +1388,6 @@ This is our step by step instructions for the TIL dbt essentials training
    clean-targets: # directories to be removed by `dbt clean`
      - "target"
      - "dbt_packages"
-
-   on-run-start:
-     - "{{ fetch_weather() }}"
 
    # Configuring models
    # Full documentation: https://docs.getdbt.com/docs/configuring-models
