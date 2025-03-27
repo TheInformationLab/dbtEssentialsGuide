@@ -630,54 +630,86 @@ This is our step by step instructions for the TIL dbt essentials training
    GROUP BY 1,3
    ```
 
-6. Add data tests to our 4 sources:
+6. Add primary key tests to our primary keys:
 
-- books(fictional/factual).Book_id
-  - unique
-  - not null
-- members.Member_id
-  - not null
-- members.Membership_tier
-  - only 'Gold', 'Silver' and 'Bronze'
-- loans.Loan_id
+- unique and not null tests
+  - books(fictional/factual).Book_id
+  - members.member_id
+  - loans.loan_id
 
-  - not null
+```yml
+version: 2
 
-  ```yml
-  version: 2
+sources:
+  - name: library
+    database: dbt_course
+    schema: library_loans
+    tables:
+      - name: books_factual
+        columns:
+          - name: book_id
+            data_tests:
+              - unique
+              - not_null
+      - name: books_fictional
+        columns:
+          - name: book_id
+            data_tests:
+              - unique
+              - not_null
+      - name: loans
+        columns:
+          - name: loan_id
+            data_tests:
+              - unique
+              - not_null
+      - name: members
+        columns:
+          - name: member_id
+            data_tests:
+              - unique
+              - not_null
+```
 
-  sources:
-    - name: library
-      database: dbt_course
-      schema: library_loans
-      tables:
-        - name: books_factual
-          columns:
-            - name: book_id
-              data_tests:
-                - unique
-                - not_null
-        - name: books_fictional
-          columns:
-            - name: book_id
-              data_tests:
-                - unique
-                - not_null
-        - name: loans
-          columns:
-            - name: loan_id
-              data_tests:
-                - not_null
-        - name: members
-          columns:
-            - name: member_id
-              data_tests:
-                - not_null
-            - name: membership_tier
-              data_tests:
-                - accepted_values:
-                    values: ["Bronze", "Silver", "Gold"]
-  ```
+7. Check that we only have 'Gold', 'Silver' and 'Bronze' membership tiers
+
+```yml
+version: 2
+
+sources:
+  - name: library
+    database: dbt_course
+    schema: library_loans
+    tables:
+      - name: books_factual
+        columns:
+          - name: book_id
+            data_tests:
+              - unique
+              - not_null
+      - name: books_fictional
+        columns:
+          - name: book_id
+            data_tests:
+              - unique
+              - not_null
+      - name: loans
+        columns:
+          - name: loan_id
+            data_tests:
+              - unique
+              - not_null
+      - name: members
+        columns:
+          - name: member_id
+            data_tests:
+              - unique
+              - not_null
+          - name: membership_tier
+            data_tests:
+              - accepted_values:
+                  values: ["Bronze", "Silver", "Gold"]
+```
 
 8. In the command bar, run the command
 
@@ -685,7 +717,7 @@ This is our step by step instructions for the TIL dbt essentials training
    dbt test --select library_loans
    ```
 
-   5 should pass, 2 should fail
+   7 should pass, 2 should fail
 
 9. Create a new model in libary_loans called stg_members.sql ("/models/library_loans/stg_members.sql")
 
@@ -726,6 +758,7 @@ This is our step by step instructions for the TIL dbt essentials training
             columns:
               - name: loan_id
                 data_tests:
+                  - unique
                   - not_null
           - name: members
 
@@ -734,6 +767,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: member_id
             data_tests:
+              - unique
               - not_null
           - name: membership_tier
             data_tests:
@@ -789,6 +823,7 @@ This is our step by step instructions for the TIL dbt essentials training
             columns:
               - name: loan_id
                 data_tests:
+                  - unique
                   - not_null
           - name: members
 
@@ -797,6 +832,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: member_id
             data_tests:
+              - unique
               - not_null
           - name: membership_tier
             data_tests:
@@ -839,6 +875,7 @@ This is our step by step instructions for the TIL dbt essentials training
             columns:
               - name: loan_id
                 data_tests:
+                  - unique
                   - not_null
               - name: book_id
                 data_tests:
@@ -857,6 +894,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: member_id
             data_tests:
+              - unique
               - not_null
           - name: membership_tier
             data_tests:
@@ -914,6 +952,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: member_id
             data_tests:
+              - unique
               - not_null
           - name: membership_tier
             data_tests:
@@ -929,6 +968,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: loan_id
             data_tests:
+              - unique
               - not_null
           - name: book_id
             data_tests:
@@ -1050,6 +1090,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: member_id
             data_tests:
+              - unique
               - not_null
           - name: membership_tier
             data_tests:
@@ -1065,6 +1106,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: loan_id
             data_tests:
+              - unique
               - not_null
           - name: book_id
             data_tests:
@@ -1152,6 +1194,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: member_id
             data_tests:
+              - unique
               - not_null
           - name: membership_tier
             data_tests:
@@ -1167,6 +1210,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: loan_id
             data_tests:
+              - unique
               - not_null
           - name: book_id
             data_tests:
@@ -1234,6 +1278,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: member_id
             data_tests:
+              - unique
               - not_null
           - name: membership_tier
             data_tests:
@@ -1249,6 +1294,7 @@ This is our step by step instructions for the TIL dbt essentials training
         columns:
           - name: loan_id
             data_tests:
+              - unique
               - not_null
           - name: book_id
             data_tests:
@@ -1327,9 +1373,6 @@ This is our step by step instructions for the TIL dbt essentials training
 
    models:
      - name: stg_weather_data
-       config:
-         pre_hook:
-           - "{{ fetch_weather() }}"
    ```
 
 5. Create stg_weather_data.sql in the office_weather directory ("/models/office_weather/stg_weather_data.sql")
@@ -1341,7 +1384,25 @@ This is our step by step instructions for the TIL dbt essentials training
    from {{ source('office_weather', 'weather_readings') }}
    ```
 
-7. Update the dbt_project.yml file ("/dbt_project.yml") to materialize everything in the office_weather folder as a view by default
+7. Update the schema.yml file ("/models/office_weather/schema.yml") to add a config block with a pre-hook to run the fetch_weather() macro before the stg_weather_data model is run
+
+   ```yml
+   version: 2
+
+   sources:
+     - name: office_weather
+       schema: "{{target.schema}}"
+       tables:
+         - name: weather_readings
+
+   models:
+     - name: stg_weather_data
+       config:
+         pre_hook:
+           - "{{ fetch_weather() }}"
+   ```
+
+8. Update the dbt_project.yml file ("/dbt_project.yml") to materialize everything in the office_weather folder as a view by default
 
    ```yml
    models:
@@ -1417,7 +1478,7 @@ This is our step by step instructions for the TIL dbt essentials training
 
    </details>
 
-8. In the command bar, run the command
+9. In the command bar, run the command
 
    ```sh
    dbt build --select office_weather
@@ -1425,16 +1486,16 @@ This is our step by step instructions for the TIL dbt essentials training
 
    To run our macro and then make our staging model in the data warehouse
 
-9. Create a new file within the office_weather directory called all_weather_data.sql ("/models/office_weather/all_weather_data.sql")
+10. Create a new file within the office_weather directory called all_weather_data.sql ("/models/office_weather/all_weather_data.sql")
 
-10. Update all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to select from the stg_weather_data model
+11. Update all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to select from the stg_weather_data model
 
     ```sql
     select *
     from {{ ref('stg_weather_data') }}
     ```
 
-11. Configure all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to be an incremental model by adding a config block to the start of the file. Specify that the combination of office and time is what conveys uniqueness
+12. Configure all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to be an incremental model by adding a config block to the start of the file. Specify that the combination of office and time is what conveys uniqueness
 
     ```sql
     {{
@@ -1447,7 +1508,7 @@ This is our step by step instructions for the TIL dbt essentials training
     from {{ ref('stg_weather_data') }}
     ```
 
-12. Update all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to include an is_incremental block to compare the time field to the maximum value of the time field from its prior state
+13. Update all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to include an is_incremental block to compare the time field to the maximum value of the time field from its prior state
 
     ```sql
     {{
@@ -1465,7 +1526,7 @@ This is our step by step instructions for the TIL dbt essentials training
     {% endif %}
     ```
 
-13. In the command bar, run the command
+14. In the command bar, run the command
 
     ```sh
     dbt build --select office_weather
@@ -1473,7 +1534,7 @@ This is our step by step instructions for the TIL dbt essentials training
 
     To make all our office_weather models. stg_weather_data and all_weather_data should both be built.
 
-14. In the command bar, run the command
+15. In the command bar, run the command
 
     ```sh
     dbt build --select all_weather_data
@@ -1481,7 +1542,7 @@ This is our step by step instructions for the TIL dbt essentials training
 
     To make the all_weather_data model in the data warehouse. You should see the incremental where clause present in the logs.
 
-15. In the command bar, run the command
+16. In the command bar, run the command
 
     ```sh
     dbt build --select all_weather_data --full-refresh
