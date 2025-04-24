@@ -333,7 +333,7 @@ This is our step by step instructions for the TIL dbt essentials training
 
     to create and test all models in our data warehouse. All should pass.
 
-23. Update the sources.yml file in the lego directory ("/models/lego/sources.yml") to paste in the completed version from the fileshare.
+23. Update the sources.yml file in the lego directory ("/models/lego/sources.yml") to paste in the completed version from below. 
 
     ```yml
     version: 2
