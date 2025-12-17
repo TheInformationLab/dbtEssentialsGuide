@@ -26,7 +26,7 @@
    GROUP BY 1,3
    ```
 
-3. Create a schema.yml file in the library_loans directory ("/models/library_loans/schema.yml") and copy/paste into it the yaml from the starter file schema.yml
+3. Create a _schema.yml file in the library_loans directory ("/models/library_loans/_schema.yml") and copy/paste into it the yaml from the starter file _schema.yml
 
    ```yml
    version: 2
@@ -162,7 +162,8 @@ sources:
           - name: membership_tier
             data_tests:
               - accepted_values:
-                  values: ["Bronze", "Silver", "Gold"]
+                  arguments:
+                    values: ["Bronze", "Silver", "Gold"]
 ```
 
 8. In the command bar, run the command
@@ -186,7 +187,7 @@ sources:
 
     This creates a staging model which abides by our constraints for incoming members data
 
-11. In the library_loans schema.yml take the members tests (lines 26-33) and apply them to the new stg_members in a models block
+11. In the library_loans _schema.yml take the members tests (lines 26-33) and apply them to the new stg_members in a models block
 
     ```yml
     version: 2
@@ -226,7 +227,8 @@ sources:
           - name: membership_tier
             data_tests:
               - accepted_values:
-                  values: ["Bronze", "Silver", "Gold"]
+                  arguments:
+                    values: ["Bronze", "Silver", "Gold"]
     ```
 
 12. In the command bar, run the command
@@ -261,7 +263,7 @@ sources:
 
     This combines both fictional and factual books into one table, while removing any null book_ids
 
-15. In the library_loans schema.yml remove the book_id tests (lines 9-13 and 15-19) and apply a single book_id non_null and unique test to the new stg_books in the models section.
+15. In the library_loans _schema.yml remove the book_id tests (lines 9-13 and 15-19) and apply a single book_id non_null and unique test to the new stg_books in the models section.
 
     ```yml
     version: 2
@@ -291,7 +293,8 @@ sources:
           - name: membership_tier
             data_tests:
               - accepted_values:
-                  values: ["Bronze", "Silver", "Gold"]
+                  arguments:
+                    values: ["Bronze", "Silver", "Gold"]
       - name: stg_books
         columns:
           - name: book_id
@@ -334,13 +337,15 @@ sources:
               - name: book_id
                 data_tests:
                   - relationships:
-                      to: ref('stg_books')
-                      field: book_id
+                      arguments:
+                        to: ref('stg_books')
+                        field: book_id
               - name: member_id
                 data_tests:
                   - relationships:
-                      to: ref('stg_members')
-                      field: member_id
+                      arguments:
+                        to: ref('stg_members')
+                        field: member_id
           - name: members
 
     models:
@@ -353,7 +358,8 @@ sources:
           - name: membership_tier
             data_tests:
               - accepted_values:
-                  values: ["Bronze", "Silver", "Gold"]
+                  arguments:
+                    values: ["Bronze", "Silver", "Gold"]
       - name: stg_books
         columns:
           - name: book_id
@@ -386,7 +392,7 @@ sources:
 
     This applies our not null tests, and also checks for referential integrity with our foreign keys (book_id and member_id)
 
-21. Update the schema.yml file in the library_loans folder to remove all the source loans data_tests and apply them to the new stg_loans model
+21. Update the _schema.yml file in the library_loans folder to remove all the source loans data_tests and apply them to the new stg_loans model
 
     ```yml
     version: 2
@@ -411,7 +417,8 @@ sources:
           - name: membership_tier
             data_tests:
               - accepted_values:
-                  values: ["Bronze", "Silver", "Gold"]
+                  arguments:
+                    values: ["Bronze", "Silver", "Gold"]
       - name: stg_books
         columns:
           - name: book_id
@@ -427,13 +434,15 @@ sources:
           - name: book_id
             data_tests:
               - relationships:
-                  to: ref('stg_books')
-                  field: book_id
+                  arguments:
+                    to: ref('stg_books')
+                    field: book_id
           - name: member_id
             data_tests:
               - relationships:
-                  to: ref('stg_members')
-                  field: member_id
+                  arguments:
+                    to: ref('stg_members')
+                    field: member_id
     ```
 
 22. Update the customers_with_late_fees.sql file to refer to our new staging tables, rather than the original sources using the ref() function. You'll also need to update the SQL now that there's only 1 stg_books table compared to the 2 book sources.
@@ -513,7 +522,7 @@ sources:
     {% endtest %}
     ```
 
-30. Update the schema.yml file in the library_loans folder ("/models/library_loans/schema.yml") to apply the no_negative_values test to the fee_applied column of the customer_withdrawals model at the end of the file.
+30. Update the _schema.yml file in the library_loans folder ("/models/library_loans/_schema.yml") to apply the no_negative_values test to the fee_applied column of the customer_withdrawals model at the end of the file.
 
     ```yml
     - name: customer_withdrawals
@@ -524,7 +533,7 @@ sources:
     ```
 
     <details>
-    <summary>full schema.yml</summary>
+    <summary>full _schema.yml</summary>
 
     ```yml
     version: 2
@@ -549,7 +558,8 @@ sources:
           - name: membership_tier
             data_tests:
               - accepted_values:
-                  values: ["Bronze", "Silver", "Gold"]
+                  arguments:
+                    values: ["Bronze", "Silver", "Gold"]
       - name: stg_books
         columns:
           - name: book_id
@@ -565,13 +575,15 @@ sources:
           - name: book_id
             data_tests:
               - relationships:
-                  to: ref('stg_books')
-                  field: book_id
+                  arguments:
+                    to: ref('stg_books')
+                    field: book_id
           - name: member_id
             data_tests:
               - relationships:
-                  to: ref('stg_members')
-                  field: member_id
+                  arguments:
+                    to: ref('stg_members')
+                    field: member_id
       - name: customer_withdrawals
         columns:
           - name: fee_applied
@@ -620,7 +632,7 @@ sources:
 
     </details>
 
-37. Update the schema.yml file in the library_loans folder ("/models/library_loans/schema.yml") to add a seeds section to the end of the file with solution named.
+37. Update the _schema.yml file in the library_loans folder ("/models/library_loans/_schema.yml") to add a seeds section to the end of the file with solution named.
 
     ```yml
     seeds:
@@ -628,7 +640,7 @@ sources:
     ```
 
     <details>
-    <summary>full schema.yml</summary>
+    <summary>full _schema.yml</summary>
 
     ```yml
     version: 2
@@ -653,7 +665,8 @@ sources:
           - name: membership_tier
             data_tests:
               - accepted_values:
-                  values: ["Bronze", "Silver", "Gold"]
+                  arguments:
+                    values: ["Bronze", "Silver", "Gold"]
       - name: stg_books
         columns:
           - name: book_id
@@ -669,13 +682,15 @@ sources:
           - name: book_id
             data_tests:
               - relationships:
-                  to: ref('stg_books')
-                  field: book_id
+                  arguments:
+                    to: ref('stg_books')
+                    field: book_id
           - name: member_id
             data_tests:
               - relationships:
-                  to: ref('stg_members')
-                  field: member_id
+                  arguments:
+                    to: ref('stg_members')
+                    field: member_id
       - name: customer_withdrawals
         columns:
           - name: fee_applied
@@ -696,7 +711,7 @@ sources:
 
     To load the seed file into the data warehouse
 
-39. Update the schema.yml file in the library_loans folder ("/models/library_loans/schema.yml") to add the [dbt_utils.equal_rowcount](https://github.com/dbt-labs/dbt-utils/tree/1.3.0/#equal_rowcount-source) test to the customers_with_late_fees model comparing to the solution seed. Also add an [accepted_range test](https://github.com/dbt-labs/dbt-utils/tree/1.3.0/#accepted_range-source) on the discount_applied column to check it's between 0 and 25%
+39. Update the _schema.yml file in the library_loans folder ("/models/library_loans/_schema.yml") to add the [dbt_utils.equal_rowcount](https://github.com/dbt-labs/dbt-utils/tree/1.3.0/#equal_rowcount-source) test to the customers_with_late_fees model comparing to the solution seed. Also add an [accepted_range test](https://github.com/dbt-labs/dbt-utils/tree/1.3.0/#accepted_range-source) on the discount_applied column to check it's between 0 and 25%
 
     ```yml
     - name: customers_with_late_fees
@@ -712,7 +727,7 @@ sources:
     ```
 
     <details>
-    <summary>full schema.yml</summary>
+    <summary>full _schema.yml</summary>
 
     ```yml
     version: 2
@@ -737,7 +752,8 @@ sources:
           - name: membership_tier
             data_tests:
               - accepted_values:
-                  values: ["Bronze", "Silver", "Gold"]
+                  arguments:
+                    values: ["Bronze", "Silver", "Gold"]
       - name: stg_books
         columns:
           - name: book_id
@@ -753,13 +769,15 @@ sources:
           - name: book_id
             data_tests:
               - relationships:
-                  to: ref('stg_books')
-                  field: book_id
+                  arguments:
+                    to: ref('stg_books')
+                    field: book_id
           - name: member_id
             data_tests:
               - relationships:
-                  to: ref('stg_members')
-                  field: member_id
+                  arguments:
+                    to: ref('stg_members')
+                    field: member_id
       - name: customer_withdrawals
         columns:
           - name: fee_applied

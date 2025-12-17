@@ -14,7 +14,7 @@
 
 3. Make a new folder in the models directory called office_weather ("/models/office_weather")
 
-4. Create a schema.yml file in the office_weather directory ("/models/office_weather/schema.yml") and copy/paste into it the yaml from the starter file schema.yml
+4. Create a _schema.yml file in the office_weather directory ("/models/office_weather/_schema.yml") and copy/paste into it the yaml from the starter file _schema.yml
 
    ```yml
    version: 2
@@ -38,7 +38,7 @@
    from {{ source('office_weather', 'weather_readings') }}
    ```
 
-7. Update the schema.yml file ("/models/office_weather/schema.yml") to add a config block with a pre-hook to run the fetch_weather() macro before the stg_weather_data model is run
+7. Update the _schema.yml file ("/models/office_weather/_schema.yml") to add a config block with a pre-hook to run the fetch_weather() macro before the stg_weather_data model is run
 
    ```yml
    version: 2
