@@ -124,7 +124,7 @@
 
     to create all models in the lego folder in our data warehouse
 
-11. Create a new file within the lego directory called sources.yml ("/models/lego/sources.yml") directing dbt to where the source tables are.
+11. Create a new file within the lego directory called _sources.yml ("/models/lego/_sources.yml") directing dbt to where the source tables are.
 
     ```yaml
     version: 2
@@ -239,7 +239,7 @@
 
     to create the two lego models sequentially in the data warehouse
 
-18. Create a new file within the lego directory called schema.yml ("/models/lego/schema.yml") to add in documentation and tests.
+18. Create a new file within the lego directory called _schema.yml ("/models/lego/_schema.yml") to add in documentation and tests.
 
     ```yml
     version: 2
@@ -323,7 +323,7 @@
 
     to create and test all models in our data warehouse. All should pass.
 
-23. Update the sources.yml file in the lego directory ("/models/lego/sources.yml") to paste in the completed version from the fileshare.
+23. Update the _sources.yml file in the lego directory ("/models/lego/_sources.yml") to paste in the completed version from the fileshare.
 
     ```yml
     version: 2
@@ -353,7 +353,8 @@
               - name: is_trans
                 data_tests:
                   - accepted_values:
-                      values: ["TRUE", "FALSE"]
+                      arguments:
+                        values: ["TRUE", "FALSE"]
 
           - name: inventories
             description: dimension table of what we currently stock
@@ -372,8 +373,9 @@
                 data_tests:
                   - not_null
                   - relationships:
-                      to: source('lego','sets')
-                      field: set_num
+                      arguments:
+                        to: source('lego','sets')
+                        field: set_num
 
           - name: inventory_parts
             description: the parts within each set we stock
@@ -383,8 +385,9 @@
                 data_tests:
                   - not_null
                   - relationships:
-                      to: source('lego','inventories')
-                      field: id
+                      arguments:
+                        to: source('lego','inventories')
+                        field: id
               - name: part_num
                 description: foreign key to parts table - not behaving properly
                 data_tests:
@@ -394,8 +397,9 @@
                 data_tests:
                   - not_null
                   - relationships:
-                      to: source('lego','colors')
-                      field: id
+                      arguments:
+                        to: source('lego','colors')
+                        field: id
               - name: quantity
                 description: how many of that part is in the set
                 data_tests:
@@ -405,7 +409,8 @@
                 data_tests:
                   - not_null
                   - accepted_values:
-                      values: ["TRUE", "FALSE"]
+                      arguments:
+                        values: ["TRUE", "FALSE"]
 
           - name: inventory_sets
             description: dimension table of sets and how many we stock
@@ -415,15 +420,17 @@
                 data_tests:
                   - not_null
                   - relationships:
-                      to: source('lego','inventories')
-                      field: id
+                      arguments:
+                        to: source('lego','inventories')
+                        field: id
               - name: set_num
                 description: foreign key from sets
                 data_tests:
                   - not_null
                   - relationships:
-                      to: source('lego','sets')
-                      field: set_num
+                      arguments:
+                        to: source('lego','sets')
+                        field: set_num
               - name: quantity
                 description: how many of each set we hold
 
@@ -444,8 +451,9 @@
                 data_tests:
                   - not_null
                   - relationships:
-                      to: source('lego','part_categories')
-                      field: id
+                      arguments:
+                        to: source('lego','part_categories')
+                        field: id
 
           - name: part_categories
             description: dimension table combining parts into different categories
@@ -481,8 +489,9 @@
                 data_tests:
                   - not_null
                   - relationships:
-                      to: source('lego','themes')
-                      field: id
+                      arguments:
+                        to: source('lego','themes')
+                        field: id
               - name: num_parts
                 description: the number of parts in each set
                 data_tests:
@@ -504,8 +513,9 @@
                 description: if a theme is a sub-theme, the id of its parent
                 data_tests:
                   - relationships:
-                      to: source('lego','themes')
-                      field: id
+                      arguments:
+                        to: source('lego','themes')
+                        field: id
     ```
 
     This completed version has full descriptions of sources and their columns. It also uses all 4 in-built data_tests (not_null, unique, accepted_values, relationships)
