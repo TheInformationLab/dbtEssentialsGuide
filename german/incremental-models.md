@@ -1,8 +1,8 @@
 # Inkrementelle Models
 
-1. Erstellen Sie eine neue Datei namens fetch_weather.sql im macros-Verzeichnis ("/macros/fetch_weather.sql").
+1. Erstellen Sie eine neue Datei namens `fetch_weather.sql` im macros-Verzeichnis (`/macros/fetch_weather.sql`).
 
-2. Kopieren Sie den SQL-Code aus der Starterdatei fetch_weather.sql
+2. Kopieren Sie den SQL-Code aus der Starterdatei `fetch_weather.sql`
 
    ```sql
    {% macro fetch_weather() %}
@@ -12,9 +12,9 @@
 
    Dies führt die Prozedur dbt_fetch_weather() aus und erstellt eine Tabelle im Schema, in dem wir arbeiten
 
-3. Erstellen Sie einen neuen Ordner im models-Verzeichnis namens office_weather ("/models/office_weather")
+3. Erstellen Sie einen neuen Ordner im models-Verzeichnis namens office_weather (`/models/office_weather`)
 
-4. Erstellen Sie eine \_schema.yml-Datei im office_weather-Verzeichnis ("/models/office_weather/\_schema.yml") und kopieren/einfügen Sie den YAML-Code aus der Starterdatei \_schema.yml
+4. Erstellen Sie eine `_schema.yml`-Datei im office_weather-Verzeichnis (`/models/office_weather/_schema.yml`) und kopieren/einfügen Sie den YAML-Code aus der Starterdatei `_schema.yml`
 
    ```yml
    version: 2
@@ -29,16 +29,16 @@
      - name: stg_weather_data
    ```
 
-5. Erstellen Sie stg_weather_data.sql im office_weather-Verzeichnis ("/models/office_weather/stg_weather_data.sql")
+5. Erstellen Sie `stg_weather_data.sql` im office_weather-Verzeichnis (`/models/office_weather/stg_weather_data.sql`)
 
-6. Schreiben Sie folgende Abfrage in die stg_weather_data.sql-Datei ("/models/office_weather/stg_weather_data.sql"), um unsere Quelldaten weather_readings vorzubereiten
+6. Schreiben Sie folgende Abfrage in die `stg_weather_data.sql`-Datei (`/models/office_weather/stg_weather_data.sql`), um unsere Quelldaten weather_readings vorzubereiten
 
    ```SQL
    select *
    from {{ source('office_weather', 'weather_readings') }}
    ```
 
-7. Aktualisieren Sie die \_schema.yml-Datei ("/models/office_weather/\_schema.yml"), um einen config-Block mit einem pre-hook hinzuzufügen, der das fetch_weather()-Makro ausführt, bevor das Modell stg_weather_data ausgeführt wird
+7. Aktualisieren Sie die `_schema.yml`-Datei (`/models/office_weather/_schema.yml`), um einen config-Block mit einem pre-hook hinzuzufügen, der das `fetch_weather()`-Makro ausführt, bevor das Modell `stg_weather_data` ausgeführt wird
 
    ```yml
    version: 2
@@ -56,7 +56,7 @@
            - "{{ fetch_weather() }}"
    ```
 
-8. Aktualisieren Sie die dbt_project.yml-Datei ("/dbt_project.yml"), um alles im office_weather-Ordner standardmäßig als View zu materialisieren
+8. Aktualisieren Sie die `dbt_project.yml`-Datei (`/dbt_project.yml`), um alles im office_weather-Ordner standardmäßig als View zu materialisieren
 
    ```yml
    models:
@@ -140,16 +140,16 @@
 
    Um unser Makro auszuführen und anschließend unser Staging-Modell im Data Warehouse zu erstellen
 
-10. Erstellen Sie eine neue Datei im office_weather-Verzeichnis namens all_weather_data.sql ("/models/office_weather/all_weather_data.sql")
+10. Erstellen Sie eine neue Datei im office_weather-Verzeichnis namens all_weather_data.sql (`/models/office_weather/all_weather_data.sql`)
 
-11. Aktualisieren Sie all_weather_data.sql ("/models/office_weather/all_weather_data.sql"), um aus dem Modell stg_weather_data auszuwählen
+11. Aktualisieren Sie all_weather_data.sql (`/models/office_weather/all_weather_data.sql`), um aus dem Modell stg_weather_data zu nutzen
 
     ```sql
     select *
     from {{ ref('stg_weather_data') }}
     ```
 
-12. Konfigurieren Sie all_weather_data.sql ("/models/office_weather/all_weather_data.sql") als inkrementelles Modell, indem Sie am Anfang der Datei einen config-Block hinzufügen. Geben Sie an, dass die Kombination von office und time Eindeutigkeit gewährleistet
+12. Konfigurieren Sie all_weather_data.sql (`/models/office_weather/all_weather_data.sql`) als inkrementelles Modell, indem Sie am Anfang der Datei einen config-Block hinzufügen. Geben Sie an, dass die Kombination von office und time Eindeutigkeit gewährleistet
 
     ```sql
     {{
@@ -162,7 +162,7 @@
     from {{ ref('stg_weather_data') }}
     ```
 
-13. Aktualisieren Sie all_weather_data.sql ("/models/office_weather/all_weather_data.sql"), um einen is_incremental-Block hinzuzufügen, der das time-Feld mit dem maximalen Wert des time-Feldes aus dessen vorherigem Zustand vergleicht
+13. Aktualisieren Sie all_weather_data.sql (`/models/office_weather/all_weather_data.sql`), um einen is_incremental-Block hinzuzufügen, der das time-Feld mit dem maximalen Wert des time-Feldes aus dessen vorherigem Zustand vergleicht
 
     ```sql
     {{
