@@ -85,86 +85,85 @@
    ```
 
 6. Füge Primärschlüsseltests zu unseren Primärschlüsseln hinzu:
+   - Unique und Not-Null-Tests
+     - books(fictional/factual).Book_id
+     - members.member_id
+     - loans.loan_id
 
-- Unique und Not-Null-Tests
-  - books(fictional/factual).Book_id
-  - members.member_id
-  - loans.loan_id
+   ```yml
+   version: 2
 
-```yml
-version: 2
-
-sources:
-  - name: library
-    database: dbt_course
-    schema: library_loans
-    tables:
-      - name: books_factual
-        columns:
-          - name: book_id
-            data_tests:
-              - unique
-              - not_null
-      - name: books_fictional
-        columns:
-          - name: book_id
-            data_tests:
-              - unique
-              - not_null
-      - name: loans
-        columns:
-          - name: loan_id
-            data_tests:
-              - unique
-              - not_null
-      - name: members
-        columns:
-          - name: member_id
-            data_tests:
-              - unique
-              - not_null
-```
+   sources:
+     - name: library
+       database: dbt_course
+       schema: library_loans
+       tables:
+         - name: books_factual
+           columns:
+             - name: book_id
+               data_tests:
+                 - unique
+                 - not_null
+         - name: books_fictional
+           columns:
+             - name: book_id
+               data_tests:
+                 - unique
+                 - not_null
+         - name: loans
+           columns:
+             - name: loan_id
+               data_tests:
+                 - unique
+                 - not_null
+         - name: members
+           columns:
+             - name: member_id
+               data_tests:
+                 - unique
+                 - not_null
+   ```
 
 7. Stelle sicher, dass wir nur 'Gold', 'Silver' und 'Bronze' Mitgliedschaftsstufen haben
 
-```yml
-version: 2
+   ```yml
+   version: 2
 
-sources:
-  - name: library
-    database: dbt_course
-    schema: library_loans
-    tables:
-      - name: books_factual
-        columns:
-          - name: book_id
-            data_tests:
-              - unique
-              - not_null
-      - name: books_fictional
-        columns:
-          - name: book_id
-            data_tests:
-              - unique
-              - not_null
-      - name: loans
-        columns:
-          - name: loan_id
-            data_tests:
-              - unique
-              - not_null
-      - name: members
-        columns:
-          - name: member_id
-            data_tests:
-              - unique
-              - not_null
-          - name: membership_tier
-            data_tests:
-              - accepted_values:
-                  arguments:
-                    values: ["Bronze", "Silver", "Gold"]
-```
+   sources:
+     - name: library
+       database: dbt_course
+       schema: library_loans
+       tables:
+         - name: books_factual
+           columns:
+             - name: book_id
+               data_tests:
+                 - unique
+                 - not_null
+         - name: books_fictional
+           columns:
+             - name: book_id
+               data_tests:
+                 - unique
+                 - not_null
+         - name: loans
+           columns:
+             - name: loan_id
+               data_tests:
+                 - unique
+                 - not_null
+         - name: members
+           columns:
+             - name: member_id
+               data_tests:
+                 - unique
+                 - not_null
+             - name: membership_tier
+               data_tests:
+                 - accepted_values:
+                     arguments:
+                       values: ["Bronze", "Silver", "Gold"]
+   ```
 
 8. Führe in der Befehlszeile folgenden Befehl aus
 
@@ -815,4 +814,4 @@ sources:
 
     Um alle library_loans-Modelle zu erstellen und zu testen. Alle Tests sollten bestanden werden
 
-### [Zurück zur Anleitung](../ReadMe.md)
+## [Zurück zum Inhaltsverzeichnis](readme.md)

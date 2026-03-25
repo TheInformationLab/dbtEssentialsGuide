@@ -204,4 +204,4 @@
 
     Um das all_weather_data-Modell im Data Warehouse zu erstellen. Jetzt sollte die inkrementelle Where-Klausel nicht mehr in den Logs sichtbar sein.
 
-### [Zurück zur Anleiteliste](../ReadMe.md)
+## [Zurück zum Inhaltsverzeichnis](readme.md)

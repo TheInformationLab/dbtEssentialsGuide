@@ -124,7 +124,7 @@
 
     to create all models in the lego folder in our data warehouse
 
-11. Create a new file within the lego directory called _sources.yml ("/models/lego/_sources.yml") directing dbt to where the source tables are.
+11. Create a new file within the lego directory called \_sources.yml ("/models/lego/\_sources.yml") directing dbt to where the source tables are.
 
     ```yaml
     version: 2
@@ -239,7 +239,7 @@
 
     to create the two lego models sequentially in the data warehouse
 
-18. Create a new file within the lego directory called _schema.yml ("/models/lego/_schema.yml") to add in documentation and tests.
+18. Create a new file within the lego directory called \_schema.yml ("/models/lego/\_schema.yml") to add in documentation and tests.
 
     ```yml
     version: 2
@@ -323,7 +323,7 @@
 
     to create and test all models in our data warehouse. All should pass.
 
-23. Update the _sources.yml file in the lego directory ("/models/lego/_sources.yml") to paste in the completed version from the fileshare.
+23. Update the \_sources.yml file in the lego directory ("/models/lego/\_sources.yml") to paste in the completed version from the fileshare.
 
     ```yml
     version: 2
@@ -544,4 +544,4 @@
 
     ![commit and sync](../images/commit_and_sync.png)
 
-### [Back to guide list](../ReadMe.md)
+### [Back to guide list](readme.md)
