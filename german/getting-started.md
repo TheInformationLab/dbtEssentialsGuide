@@ -1,30 +1,30 @@
-# Getting started with dbt Cloud
+# Erste Schritte mit dbt Cloud
 
-1. Click "Initialize dbt project" in version control
+1. Klicke auf "Initialize dbt project" in der Versionskontrolle
 
    ![initialise dbt project](../images/initialise_project.png)
 
-2. Click "Commit and sync" in version control and enter a commit message in the dialogue box
+2. Klicke auf "Commit and sync" in der Versionskontrolle und gib eine Commit-Nachricht in das Dialogfeld ein
 
    ![commit and sync](../images/commit_and_sync.png)
 
-3. Click "Create branch" in version control and name it "intro-training"
+3. Klicke auf "Create branch" in der Versionskontrolle und benenne es "intro-training"
 
    ![create branch](../images/create_branch.png)
 
    ![name the branch](../images/branch_name.png)
 
-4. In the command bar, run the command
+4. Führe den folgenden Befehl in der Befehlszeile aus
 
    ```sh
    dbt run
    ```
 
-   to create all models in our data warehouse
+   um alle Modelle in unserem Data Warehouse zu erstellen
 
-5. Make a new folder lego within the models directory ("/models/lego")
+5. Erstelle einen neuen Ordner "lego" im Verzeichnis "models" ("/models/lego")
 
-6. Update dbt_project.yml lines 38-43 to materialize all models in the lego directory as tables by default
+6. Aktualisiere dbt_project.yml in den Zeilen 38–43, um alle Modelle im Verzeichnis "lego" standardmäßig als Tabellen zu materialisieren
 
    ```yaml
    models:
@@ -37,7 +37,7 @@
          +materialized: table
    ```
 
-7. Create a new file within the legos directory called parts_per_set.sql ("/models/lego/parts_per_set.sql") and paste in the contents from Original Lego Script.txt
+7. Erstelle eine neue Datei im Verzeichnis "lego" namens "parts_per_set.sql" ("/models/lego/parts_per_set.sql") und füge den Inhalt aus "Original Lego Script.txt" ein
 
    ```sql
    WITH UNIQUE_PARTS AS (
@@ -68,22 +68,22 @@
    GROUP BY 1,2,3,4;
    ```
 
-8. In the command bar, run the command
+8. Führe den folgenden Befehl in der Befehlszeile aus
 
    ```sh
    dbt run --select parts_per_set
    ```
 
-   to create the parts_per_set model in our data warehouse
+   um das Modell "parts_per_set" in unserem Data Warehouse zu erstellen
 
-9. Remove the semicolon from line 26 in models/lego/parts_per_set.sql
+9. Entferne das Semikolon aus Zeile 26 in "models/lego/parts_per_set.sql"
 
    ```sql
    GROUP BY 1,2,3,4
    ```
 
    <details>
-   <summary>Full sql</summary>
+   <summary>Vollständiges SQL</summary>
 
    ```sql
    WITH UNIQUE_PARTS AS (
@@ -116,15 +116,15 @@
 
    </details>
 
-10. In the command bar, run the command
+10. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt run --select lego
     ```
 
-    to create all models in the lego folder in our data warehouse
+    um alle Modelle im Verzeichnis "lego" in unserem Data Warehouse zu erstellen
 
-11. Create a new file within the lego directory called _sources.yml ("/models/lego/_sources.yml") directing dbt to where the source tables are.
+11. Erstelle eine neue Datei im Verzeichnis "lego" namens "\_sources.yml" ("/models/lego/\_sources.yml"), um dbt zu zeigen, wo sich die Quelltabellen befinden
 
     ```yaml
     version: 2
@@ -141,7 +141,7 @@
           - name: themes
     ```
 
-12. Edit parts_per_set.sql to replace all hardcoded table names with the source function
+12. Bearbeite "parts_per_set.sql" und ersetze alle fest codierten Tabellennamen durch die source-Funktion
 
     ```sql
     WITH UNIQUE_PARTS AS (
@@ -172,9 +172,9 @@
     GROUP BY 1,2,3,4
     ```
 
-13. Create a new file in the lego directory called unique_parts.sql ("/models/lego/unique_parts.sql")
+13. Erstelle eine neue Datei im Verzeichnis "lego" namens "unique_parts.sql" ("/models/lego/unique_parts.sql")
 
-14. Copy lines 2-9 from parts_per_set.sql into unique_parts.sql
+14. Kopiere die Zeilen 2–9 aus "parts_per_set.sql" in "unique_parts.sql"
 
     ```sql
     SELECT
@@ -187,7 +187,7 @@
         HAVING COUNT(*) = 1
     ```
 
-15. Add a config block to the top of unique_parts.sql to materialize it as a view in the data warehouse
+15. Füge einen config-Block am Anfang von "unique_parts.sql" ein, um es als View im Data Warehouse zu materialisieren
 
     ```sql
     {{
@@ -206,7 +206,7 @@
         HAVING COUNT(*) = 1
     ```
 
-16. Update parts_per_set.sql to replace the CTE (lines 1-10) with a ref() function aimed at unique_parts.sql
+16. Aktualisiere "parts_per_set.sql" und ersetze den CTE (Zeilen 1–10) mit einer ref()-Funktion, die auf "unique_parts.sql" verweist
 
     ```sql
     WITH UNIQUE_PARTS AS (
@@ -231,15 +231,15 @@
     GROUP BY 1,2,3,4
     ```
 
-17. In the command bar, run the command
+17. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt run --select lego
     ```
 
-    to create the two lego models sequentially in the data warehouse
+    um die beiden lego-Modelle nacheinander in unserem Data Warehouse zu erstellen
 
-18. Create a new file within the lego directory called _schema.yml ("/models/lego/_schema.yml") to add in documentation and tests.
+18. Erstelle eine neue Datei im Verzeichnis "lego" namens "\_schema.yml" ("/models/lego/\_schema.yml"), um Dokumentation und Tests hinzuzufügen
 
     ```yml
     version: 2
@@ -266,23 +266,23 @@
               - not_null
     ```
 
-19. In the command bar, run the command
+19. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt build
     ```
 
-    to create and test all models in our data warehouse
+    um alle Modelle in unserem Data Warehouse zu erstellen und zu testen
 
-20. In the command bar, run the command
+20. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt test
     ```
 
-    to test all models
+    um alle Modelle zu testen
 
-21. Edit the my_first_dbt_model.sql file in the example directory ("/models/example/my_first_dbt_model.sql") to remove the comment on line 27
+21. Bearbeite die Datei "my_first_dbt_model.sql" im Verzeichnis "example" ("/models/example/my_first_dbt_model.sql") und entferne den Kommentar in Zeile 27
 
     ```sql
 
@@ -315,15 +315,15 @@
 
     ```
 
-22. In the command bar, run the command
+22. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt build
     ```
 
-    to create and test all models in our data warehouse. All should pass.
+    um alle Modelle in unserem Data Warehouse zu erstellen und zu testen. Alle sollten erfolgreich sein.
 
-23. Update the _sources.yml file in the lego directory ("/models/lego/_sources.yml") to paste in the completed version from the fileshare.
+23. Aktualisiere die Datei "\_sources.yml" im Verzeichnis "lego" ("/models/lego/\_sources.yml") und ersetze sie mit der fertigen Version aus der Dateifreigabe
 
     ```yml
     version: 2
@@ -518,30 +518,30 @@
                         field: id
     ```
 
-    This completed version has full descriptions of sources and their columns. It also uses all 4 in-built data_tests (not_null, unique, accepted_values, relationships)
+    Diese endgültige Version hat umfassende Beschreibungen der Quellen und ihrer Spalten. Sie verwendet auch alle 4 integrierten data_tests (not_null, unique, accepted_values, relationships)
 
-24. In the command bar, run the command
+24. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt build
     ```
 
-    to make and then test all our models sequentially in the data warehouse
+    um alle unsere Modelle nacheinander im Data Warehouse zu erstellen und zu testen
 
-25. In the command bar, run the command
+25. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt docs generate
     ```
 
-    to generate documentation based on the models and yaml files in our project
+    um Dokumentation basierend auf den Modellen und YAML-Dateien in unserem Projekt zu generieren
 
-26. Click the little document icon to see the documentation
+26. Klicke auf das kleine Dokumentsymbol, um die Dokumentation anzuzeigen
 
     ![docs icon](../images/docs_icon.png)
 
-27. Click "Commit and sync" in version control and enter a commit message in the dialogue box
+27. Klicke auf "Commit and sync" in der Versionskontrolle und gib eine Commit-Nachricht in das Dialogfeld ein
 
     ![commit and sync](../images/commit_and_sync.png)
 
-### [Back to guide list](../ReadMe.md)
+### [Zurück zur Leitfadenliste](../ReadMe.md)

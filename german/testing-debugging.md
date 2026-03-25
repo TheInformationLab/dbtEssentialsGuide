@@ -1,8 +1,8 @@
-# Testing & Debugging
+# Testen & Debugging
 
-1. Make a new folder in the models directory called library_loans ("/models/library_loans")
+1. Erstelle einen neuen Ordner im Models-Verzeichnis mit dem Namen library_loans ("/models/library_loans")
 
-2. In library_loans make a new file called customers_with_late_fees.sql ("/models/library_loans/customers_with_late_fees.sql") and copy/paste into it the SQL from the starter file customers_with_late_fees.sql.
+2. Erstelle im library_loans-Ordner eine neue Datei namens customers_with_late_fees.sql ("/models/library_loans/customers_with_late_fees.sql") und kopiere die SQL-Anweisungen aus der Starter-Datei customers_with_late_fees.sql hinein.
 
    ```sql
    WITH CTE AS (
@@ -26,7 +26,7 @@
    GROUP BY 1,3
    ```
 
-3. Create a _schema.yml file in the library_loans directory ("/models/library_loans/_schema.yml") and copy/paste into it the yaml from the starter file _schema.yml
+3. Erstelle eine \_schema.yml-Datei im library_loans-Verzeichnis ("/models/library_loans/\_schema.yml") und kopiere die YAML-Anweisungen aus der Starter-Datei \_schema.yml hinein
 
    ```yml
    version: 2
@@ -42,9 +42,9 @@
          - name: members
    ```
 
-   This will create our sources for dbt to reference
+   Dies erstellt die Quellen, die für dbt referenzieren kann
 
-4. Update the models section of the dbt_project.yml file (lines 38-45) to materialize everything in library_loans as a table by default
+4. Aktualisiere den Models-Abschnitt der dbt_project.yml-Datei (Zeilen 38-45), damit alles in library_loans standardmäßig als Tabelle materialisiert wird
 
    ```yml
    models:
@@ -60,7 +60,7 @@
          +materialized: table
    ```
 
-5. Update customers_with_late_fees.sql to use our defined sources, rather than the hardcoded values
+5. Aktualisiere customers_with_late_fees.sql, um unsere definierten Quellen zu verwenden, anstelle von hartcodierten Werten
 
    ```sql
    WITH CTE AS (
@@ -84,9 +84,9 @@
    GROUP BY 1,3
    ```
 
-6. Add primary key tests to our primary keys:
+6. Füge Primärschlüsseltests zu unseren Primärschlüsseln hinzu:
 
-- unique and not null tests
+- Unique und Not-Null-Tests
   - books(fictional/factual).Book_id
   - members.member_id
   - loans.loan_id
@@ -125,7 +125,7 @@ sources:
               - not_null
 ```
 
-7. Check that we only have 'Gold', 'Silver' and 'Bronze' membership tiers
+7. Stelle sicher, dass wir nur 'Gold', 'Silver' und 'Bronze' Mitgliedschaftsstufen haben
 
 ```yml
 version: 2
@@ -166,17 +166,17 @@ sources:
                     values: ["Bronze", "Silver", "Gold"]
 ```
 
-8. In the command bar, run the command
+8. Führe in der Befehlszeile folgenden Befehl aus
 
    ```sh
    dbt test --select library_loans
    ```
 
-   7 should pass, 2 should fail
+   7 sollten durchlaufen werden, 2 sollten fehlschlagen
 
-9. Create a new model in libary_loans called stg_members.sql ("/models/library_loans/stg_members.sql")
+9. Erstelle ein neues Modell in library_loans mit dem Namen stg_members.sql ("/models/library_loans/stg_members.sql")
 
-10. Copy in the sql from the starter file stg_members.sql
+10. Kopiere die SQL-Anweisungen aus der Starter-Datei stg_members.sql
 
     ```sql
     SELECT *
@@ -185,9 +185,9 @@ sources:
     AND membership_tier IN ('Bronze', 'Silver', 'Gold')
     ```
 
-    This creates a staging model which abides by our constraints for incoming members data
+    Dies erstellt ein Staging-Modell, das unsere Bedingungen für eingehende Mitgliederdaten einhält
 
-11. In the library_loans _schema.yml take the members tests (lines 26-33) and apply them to the new stg_members in a models block
+11. In der library_loans \_schema.yml: Schneide Mitglieder-Tests (Zeilen 26-33) aus und wende sie auf das neue stg_members-Modell in einem models-Block an
 
     ```yml
     version: 2
@@ -231,17 +231,17 @@ sources:
                     values: ["Bronze", "Silver", "Gold"]
     ```
 
-12. In the command bar, run the command
+12. Führe in der Befehlszeile folgenden Befehl aus
 
     ```sh
     dbt build --select library_loans
     ```
 
-    The accepted values test should now pass, but the unique fictional book_id should still fail
+    Der accepted-values-Test sollte nun bestanden werden, aber der unique fictional book_id-Test sollte immer noch fehlschlagen
 
-13. Create a new model in libary_loans called stg_books.sql ("/models/library_loans/stg_books.sql")
+13. Erstelle ein neues Modell in library_loans mit dem Namen stg_books.sql ("/models/library_loans/stg_books.sql")
 
-14. Copy in the sql from the starter file stg_books.sql
+14. Kopiere die SQL-Anweisungen aus der Starter-Datei stg_books.sql
 
     ```sql
     SELECT
@@ -261,9 +261,9 @@ sources:
     WHERE book_id IS NOT NULL
     ```
 
-    This combines both fictional and factual books into one table, while removing any null book_ids
+    Dies vereinigt fiktive und sachliche Bücher in einer Tabelle, während alle Null-Werte für book_ids entfernt werden
 
-15. In the library_loans _schema.yml remove the book_id tests (lines 9-13 and 15-19) and apply a single book_id non_null and unique test to the new stg_books in the models section.
+15. In der library_loans \_schema.yml entferne die book_id-Tests (Zeilen 9-13 und 15-19) und wende einen einzigen book_id not_null und unique-Test auf das neue stg_books-Modell im models-Abschnitt an.
 
     ```yml
     version: 2
@@ -303,20 +303,19 @@ sources:
               - not_null
     ```
 
-16. In the command bar, run the command
+16. Führe in der Befehlszeile folgenden Befehl aus
 
     ```sh
     dbt build --select library_loans
     ```
 
-    All tests should now pass
+    Alle Tests sollten nun bestanden werden
 
-17. Add relationship tests to our loans source:
-
+17. Füge Beziehungstests zu unserer loans-Quelle hinzu:
     - loans.book_id
-      - has a relationship to stg_books.book_id
+      - hat eine Beziehung zu stg_books.book_id
     - loans.member_id
-      - has a relationship to stg_members.member_id
+      - hat eine Beziehung zu stg_members.member_id
 
     ```yml
     version: 2
@@ -368,17 +367,17 @@ sources:
               - not_null
     ```
 
-18. In the command bar, run the command
+18. Führe in der Befehlszeile folgenden Befehl aus
 
     ```sh
     dbt test --select library_loans
     ```
 
-    Some tests will fail
+    Einige Tests werden fehlschlagen
 
-19. Create a new model in libary_loans called stg_loans.sql ("/models/library_loans/stg_loans.sql")
+19. Erstelle ein neues Modell in library_loans mit dem Namen stg_loans.sql ("/models/library_loans/stg_loans.sql")
 
-20. Copy in the sql from the starter file stg_loans.sql
+20. Kopiere die SQL-Anweisungen aus der Starter-Datei stg_loans.sql
 
     ```sql
     SELECT *
@@ -390,9 +389,9 @@ sources:
     AND member_id IN (SELECT member_id FROM {{ ref('stg_members') }})
     ```
 
-    This applies our not null tests, and also checks for referential integrity with our foreign keys (book_id and member_id)
+    Dies wendet unsere Not-Null-Tests an, überprüft auch die referenzielle Integrität mit unseren Fremdschlüsseln (book_id und member_id)
 
-21. Update the _schema.yml file in the library_loans folder to remove all the source loans data_tests and apply them to the new stg_loans model
+21. Aktualisiere die \_schema.yml-Datei im library_loans-Ordner, um alle source-loans-data_tests zu entfernen und sie auf das neue stg_loans-Modell anzuwenden
 
     ```yml
     version: 2
@@ -445,7 +444,7 @@ sources:
                     field: member_id
     ```
 
-22. Update the customers_with_late_fees.sql file to refer to our new staging tables, rather than the original sources using the ref() function. You'll also need to update the SQL now that there's only 1 stg_books table compared to the 2 book sources.
+22. Aktualisiere die customers_with_late_fees.sql-Datei, um auf unsere neuen Staging-Tabellen zu verweisen, anstelle der ursprünglichen Quellen unter Verwendung der ref()-Funktion. Du musst auch die SQL aktualisieren, da es jetzt nur noch 1 stg_books-Tabelle im Vergleich zu den 2 Book-Quellen gibt.
 
     ```sql
     WITH CTE AS (
@@ -468,9 +467,9 @@ sources:
     GROUP BY 1,3
     ```
 
-23. Create a new file called customer_withdrawals.sql in the library_loans folder ("/models/library_loans/customer_withdrawals.sql").
+23. Erstelle eine neue Datei namens customer_withdrawals.sql im library_loans-Ordner ("/models/library_loans/customer_withdrawals.sql").
 
-24. Copy the CTE query from customers_with_late_fees.sql into customer_withdrawals.sql (lines 2-10)
+24. Kopiere die CTE-Abfrage aus customers_with_late_fees.sql in customer_withdrawals.sql (Zeilen 2-10)
 
     ```sql
     SELECT
@@ -484,7 +483,7 @@ sources:
     GROUP BY 1,2,3
     ```
 
-25. Update the CTE in customer_with_late_fees.sql (lines 1-11) using the ref() function to call from the customer_withdrawals.sql model
+25. Aktualisiere die CTE in customer_with_late_fees.sql (Zeilen 1-11) unter Verwendung der ref()-Funktion, um vom customer_withdrawals.sql-Modell aufzurufen
 
     ```SQL
     WITH CTE AS (
@@ -500,19 +499,19 @@ sources:
     GROUP BY 1,3
     ```
 
-26. In the command bar, run the command
+26. Führe in der Befehlszeile folgenden Befehl aus
 
     ```sh
     dbt build --select library_loans
     ```
 
-    To make and test all the library_loans models. All tests should pass
+    Um alle library_loans-Modelle zu erstellen und zu testen. Alle Tests sollten bestanden werden
 
-27. Create a folder within the tests folder called generic ("/tests/generic")
+27. Erstelle einen Ordner im tests-Ordner mit dem Namen generic ("/tests/generic")
 
-28. In the generic tests folder, create a sql file called no_negative_values.sql ("/tests/generic/no_negative_values.sql")
+28. Erstelle im generic-tests-Ordner eine SQL-Datei mit dem Namen no_negative_values.sql ("/tests/generic/no_negative_values.sql")
 
-29. Copy into the no_negative_values.sql file the contents of the starter file no_negative_values.sql
+29. Kopiere den Inhalt der Starter-Datei no_negative_values.sql in die no_negative_values.sql-Datei
 
     ```sql
     {% test no_negative_values(model, column_name)%}
@@ -522,7 +521,7 @@ sources:
     {% endtest %}
     ```
 
-30. Update the _schema.yml file in the library_loans folder ("/models/library_loans/_schema.yml") to apply the no_negative_values test to the fee_applied column of the customer_withdrawals model at the end of the file.
+30. Aktualisiere die \_schema.yml-Datei im library_loans-Ordner ("/models/library_loans/\_schema.yml"), um den no_negative_values-Test auf die fee_applied-Spalte des customer_withdrawals-Modells am Ende der Datei anzuwenden.
 
     ```yml
     - name: customer_withdrawals
@@ -533,7 +532,7 @@ sources:
     ```
 
     <details>
-    <summary>full _schema.yml</summary>
+    <summary>vollständige _schema.yml</summary>
 
     ```yml
     version: 2
@@ -593,17 +592,17 @@ sources:
 
     </details>
 
-31. In the command bar, run the command
+31. Führe in der Befehlszeile folgenden Befehl aus
 
     ```sh
     dbt test --select customer_withdrawals
     ```
 
-    To test the customer_withdrawals model. See how the no_negative_values test is applied.
+    Um das customer_withdrawals-Modell zu testen. Schau dir an, wie der no_negative_values-Test angewendet wird.
 
-32. Create a file in the root directory called packages.yml ("/packages.yml")
+32. Erstelle eine Datei mit dem Namen packages.yml im root-Verzeichnis ("/packages.yml")
 
-33. Copy the install yaml from [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) into the packages.yml
+33. Kopiere die Install-YAML-Anweisungen aus [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) in die packages.yml
 
     ```yml
     packages:
@@ -611,28 +610,28 @@ sources:
         version: 1.3.0
     ```
 
-    (n.b. your version may vary)
+    (n.b. deine Version kann variieren)
 
-34. In the command bar, run the command
+34. Führe in der Befehlszeile folgenden Befehl aus
 
     ```sh
     dbt deps
     ```
 
-    To install the dbt_utils package
+    Um das dbt_utils-Paket zu installieren
 
-35. Create solution.csv in the seeds folder ("/seeds/solution.csv")
+35. Erstelle solution.csv im seeds-Ordner ("/seeds/solution.csv")
 
-36. Open the starter file solution.csv **in a text editor** and copy paste the contents into /seeds/solution.csv
+36. Öffne die Starter-Datei solution.csv **in einem Text-Editor** und kopiere den Inhalt in /seeds/solution.csv
 
     <details>
-    <summary>solution.csv contents</summary>
+    <summary>solution.csv Inhalt</summary>
 
     [solution.csv](../files/solution.csv)
 
     </details>
 
-37. Update the _schema.yml file in the library_loans folder ("/models/library_loans/_schema.yml") to add a seeds section to the end of the file with solution named.
+37. Aktualisiere die \_schema.yml-Datei im library_loans-Ordner ("/models/library_loans/\_schema.yml"), um einen seeds-Abschnitt am Ende der Datei mit solution hinzuzufügen.
 
     ```yml
     seeds:
@@ -640,7 +639,7 @@ sources:
     ```
 
     <details>
-    <summary>full _schema.yml</summary>
+    <summary>vollständige _schema.yml</summary>
 
     ```yml
     version: 2
@@ -703,15 +702,15 @@ sources:
 
     </details>
 
-38. In the command bar, run the command
+38. Führe in der Befehlszeile folgenden Befehl aus
 
     ```sh
     dbt seed
     ```
 
-    To load the seed file into the data warehouse
+    Um die seed-Datei in das Data Warehouse zu laden
 
-39. Update the _schema.yml file in the library_loans folder ("/models/library_loans/_schema.yml") to add the [dbt_utils.equal_rowcount](https://github.com/dbt-labs/dbt-utils/tree/1.3.0/#equal_rowcount-source) test to the customers_with_late_fees model comparing to the solution seed. Also add an [accepted_range test](https://github.com/dbt-labs/dbt-utils/tree/1.3.0/#accepted_range-source) on the discount_applied column to check it's between 0 and 25%
+39. Aktualisiere die \_schema.yml-Datei im library_loans-Ordner ("/models/library_loans/\_schema.yml"), um den [dbt_utils.equal_rowcount](https://github.com/dbt-labs/dbt-utils/tree/1.3.0/#equal_rowcount-source)-Test auf das customers_with_late_fees-Modell im Vergleich zum solution-seed hinzuzufügen. Füge auch einen [accepted_range-Test](https://github.com/dbt-labs/dbt-utils/tree/1.3.0/#accepted_range-source) auf die discount_applied-Spalte hinzu, um zu prüfen, ob sie zwischen 0 und 25% liegt
 
     ```yml
     - name: customers_with_late_fees
@@ -727,7 +726,7 @@ sources:
     ```
 
     <details>
-    <summary>full _schema.yml</summary>
+    <summary>vollständige _schema.yml</summary>
 
     ```yml
     version: 2
@@ -800,20 +799,20 @@ sources:
 
     </details>
 
-40. In the command bar, run the command
+40. Führe in der Befehlszeile folgenden Befehl aus
 
     ```sh
     dbt test --select customers_with_late_fees
     ```
 
-    To see these tests running (and passing) against the customers_with_late_fees model
+    Um diese Tests auf dem customers_with_late_fees-Modell ausführen zu sehen (und zu bestehen)
 
-41. In the command bar, run the command
+41. Führe in der Befehlszeile folgenden Befehl aus
 
     ```sh
     dbt build --select library_loans
     ```
 
-    To make and test all the library_loans models. All tests should pass
+    Um alle library_loans-Modelle zu erstellen und zu testen. Alle Tests sollten bestanden werden
 
-### [Back to guide list](../ReadMe.md)
+### [Zurück zur Anleitung](../ReadMe.md)

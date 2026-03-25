@@ -1,9 +1,9 @@
-# dbt Essentials Guide
+# dbt Essentials-Leitfaden
 
-This is our step by step instructions for The Information Lab's dbt essentials training
+Dies sind unsere Schritt-für-Schritt-Anweisungen für das dbt essentials Training von The Information Lab
 
-[Getting started with dbt Cloud](./getting-started.md)
+[Erste Schritte mit dbt Cloud](./getting-started.md)
 
-[Testing & Debugging](./testing-debugging.md)
+[Testen & Debugging](./testing-debugging.md)
 
-[Incremental Models](./incremental-models.md)
+[Inkrementelle Modelle](./incremental-models.md)
