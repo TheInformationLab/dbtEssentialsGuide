@@ -22,9 +22,9 @@
 
    um alle Modelle in unserem Data Warehouse zu erstellen
 
-5. Erstelle einen neuen Ordner "lego" im Verzeichnis "models" ("/models/lego")
+5. Erstelle einen neuen Ordner "lego" im Verzeichnis "models" (`/models/lego`)
 
-6. Aktualisiere dbt_project.yml in den Zeilen 38–43, um alle Modelle im Verzeichnis "lego" standardmäßig als Tabellen zu materialisieren
+6. Aktualisiere `dbt_project.yml` in den Zeilen 38–43, um alle Modelle im Verzeichnis "lego" standardmäßig als Tabellen zu materialisieren
 
    ```yaml
    models:
@@ -37,7 +37,7 @@
          +materialized: table
    ```
 
-7. Erstelle eine neue Datei im Verzeichnis "lego" namens "parts_per_set.sql" ("/models/lego/parts_per_set.sql") und füge den Inhalt aus "Original Lego Script.txt" ein
+7. Erstelle eine neue Datei im Verzeichnis "lego" namens `parts_per_set.sql` (`/models/lego/parts_per_set.sql`) und füge den Inhalt aus `Original Lego Script.txt` ein
 
    ```sql
    WITH UNIQUE_PARTS AS (
@@ -76,7 +76,7 @@
 
    um das Modell "parts_per_set" in unserem Data Warehouse zu erstellen
 
-9. Entferne das Semikolon aus Zeile 26 in "models/lego/parts_per_set.sql"
+9. Entferne das Semikolon aus Zeile 26 in `models/lego/parts_per_set.sql`
 
    ```sql
    GROUP BY 1,2,3,4

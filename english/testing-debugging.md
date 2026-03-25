@@ -1,8 +1,8 @@
 # Testing & Debugging
 
-1. Make a new folder in the models directory called library_loans ("/models/library_loans")
+1. Make a new folder in the models directory called library_loans (`/models/library_loans`)
 
-2. In library_loans make a new file called customers_with_late_fees.sql ("/models/library_loans/customers_with_late_fees.sql") and copy/paste into it the SQL from the starter file customers_with_late_fees.sql.
+2. In library_loans make a new file called `customers_with_late_fees.sql` (`/models/library_loans/customers_with_late_fees.sql`) and copy/paste into it the SQL from the starter file `customers_with_late_fees.sql`.
 
    ```sql
    WITH CTE AS (
@@ -26,7 +26,7 @@
    GROUP BY 1,3
    ```
 
-3. Create a \_schema.yml file in the library_loans directory ("/models/library_loans/\_schema.yml") and copy/paste into it the yaml from the starter file \_schema.yml
+3. Create a `_schema.yml` file in the library_loans directory (`/models/library_loans/_schema.yml`) and copy/paste into it the yaml from the starter file `_schema.yml`
 
    ```yml
    version: 2
@@ -44,7 +44,7 @@
 
    This will create our sources for dbt to reference
 
-4. Update the models section of the dbt_project.yml file (lines 38-45) to materialize everything in library_loans as a table by default
+4. Update the models section of the `dbt_project.yml` file (lines 38-45) to materialize everything in library_loans as a table by default
 
    ```yml
    models:
@@ -60,7 +60,7 @@
          +materialized: table
    ```
 
-5. Update customers_with_late_fees.sql to use our defined sources, rather than the hardcoded values
+5. Update `customers_with_late_fees.sql` to use our defined sources, rather than the hardcoded values
 
    ```sql
    WITH CTE AS (

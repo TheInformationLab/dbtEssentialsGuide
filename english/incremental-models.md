@@ -1,8 +1,8 @@
 # Incremental Models
 
-1. Create a new file called fetch_weather.sql in the macros folder ("/macros/fetch_weather.sql").
+1. Create a new file called `fetch_weather.sql` in the macros folder (`/macros/fetch_weather.sql`).
 
-2. Copy in the sql from the starter file fetch_weather.sql
+2. Copy in the sql from the starter file `fetch_weather.sql`
 
    ```sql
    {% macro fetch_weather() %}
@@ -12,9 +12,9 @@
 
    This runs the dbt_fetch_weather() procedure and produces its table in the schema in which we're working
 
-3. Make a new folder in the models directory called office_weather ("/models/office_weather")
+3. Make a new folder in the models directory called office_weather (`/models/office_weather`)
 
-4. Create a \_schema.yml file in the office_weather directory ("/models/office_weather/\_schema.yml") and copy/paste into it the yaml from the starter file \_schema.yml
+4. Create a `_schema.yml` file in the office_weather directory (`/models/office_weather/_schema.yml`) and copy/paste into it the yaml from the starter file `_schema.yml`
 
    ```yml
    version: 2
@@ -29,16 +29,16 @@
      - name: stg_weather_data
    ```
 
-5. Create stg_weather_data.sql in the office_weather directory ("/models/office_weather/stg_weather_data.sql")
+5. Create `stg_weather_data.sql` in the office_weather directory (`/models/office_weather/stg_weather_data.sql`)
 
-6. Into stg_weather_data.sql ("/models/office_weather/stg_weather_data.sql") write the following query to stage our source weather_reading data
+6. Into `stg_weather_data.sql` (`/models/office_weather/stg_weather_data.sql`) write the following query to stage our source weather_reading data
 
    ```SQL
    select *
    from {{ source('office_weather', 'weather_readings') }}
    ```
 
-7. Update the \_schema.yml file ("/models/office_weather/\_schema.yml") to add a config block with a pre-hook to run the fetch_weather() macro before the stg_weather_data model is run
+7. Update the `_schema.yml` file (`/models/office_weather/_schema.yml`) to add a config block with a pre-hook to run the `fetch_weather()` macro before the `stg_weather_data` model is run
 
    ```yml
    version: 2
@@ -56,7 +56,7 @@
            - "{{ fetch_weather() }}"
    ```
 
-8. Update the dbt_project.yml file ("/dbt_project.yml") to materialize everything in the office_weather folder as a view by default
+8. Update the `dbt_project.yml` file (`/dbt_project.yml`) to materialize everything in the office_weather folder as a view by default
 
    ```yml
    models:
@@ -140,16 +140,16 @@
 
    To run our macro and then make our staging model in the data warehouse
 
-10. Create a new file within the office_weather directory called all_weather_data.sql ("/models/office_weather/all_weather_data.sql")
+10. Create a new file within the office_weather directory called all_weather_data.sql (`/models/office_weather/all_weather_data.sql`)
 
-11. Update all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to select from the stg_weather_data model
+11. Update all_weather_data.sql (`/models/office_weather/all_weather_data.sql`) to select from the stg_weather_data model
 
     ```sql
     select *
     from {{ ref('stg_weather_data') }}
     ```
 
-12. Configure all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to be an incremental model by adding a config block to the start of the file. Specify that the combination of office and time is what conveys uniqueness
+12. Configure all_weather_data.sql (`/models/office_weather/all_weather_data.sql`) to be an incremental model by adding a config block to the start of the file. Specify that the combination of office and time is what conveys uniqueness
 
     ```sql
     {{
@@ -162,7 +162,7 @@
     from {{ ref('stg_weather_data') }}
     ```
 
-13. Update all_weather_data.sql ("/models/office_weather/all_weather_data.sql") to include an is_incremental block to compare the time field to the maximum value of the time field from its prior state
+13. Update all_weather_data.sql (`/models/office_weather/all_weather_data.sql`) to include an is_incremental block to compare the time field to the maximum value of the time field from its prior state
 
     ```sql
     {{

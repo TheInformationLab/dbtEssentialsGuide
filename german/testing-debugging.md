@@ -1,8 +1,8 @@
 # Testen & Debugging
 
-1. Erstelle einen neuen Ordner im Models-Verzeichnis mit dem Namen library_loans ("/models/library_loans")
+1. Erstelle einen neuen Ordner im Models-Verzeichnis mit dem Namen library_loans (`/models/library_loans`)
 
-2. Erstelle im library_loans-Ordner eine neue Datei namens customers_with_late_fees.sql ("/models/library_loans/customers_with_late_fees.sql") und kopiere die SQL-Anweisungen aus der Starter-Datei customers_with_late_fees.sql hinein.
+2. Erstelle im library_loans-Ordner eine neue Datei namens `customers_with_late_fees.sql` (`/models/library_loans/customers_with_late_fees.sql`) und kopiere die SQL-Anweisungen aus der Starter-Datei `customers_with_late_fees.sql` hinein.
 
    ```sql
    WITH CTE AS (
@@ -26,7 +26,7 @@
    GROUP BY 1,3
    ```
 
-3. Erstelle eine \_schema.yml-Datei im library_loans-Verzeichnis ("/models/library_loans/\_schema.yml") und kopiere die YAML-Anweisungen aus der Starter-Datei \_schema.yml hinein
+3. Erstelle eine `_schema.yml`-Datei im library_loans-Verzeichnis (`/models/library_loans/_schema.yml`) und kopiere die YAML-Anweisungen aus der Starter-Datei `_schema.yml` hinein
 
    ```yml
    version: 2
@@ -44,7 +44,7 @@
 
    Dies erstellt die Quellen, die für dbt referenzieren kann
 
-4. Aktualisiere den Models-Abschnitt der dbt_project.yml-Datei (Zeilen 38-45), damit alles in library_loans standardmäßig als Tabelle materialisiert wird
+4. Aktualisiere den Models-Abschnitt der `dbt_project.yml`-Datei (Zeilen 38-45), damit alles in library_loans standardmäßig als Tabelle materialisiert wird
 
    ```yml
    models:
@@ -60,7 +60,7 @@
          +materialized: table
    ```
 
-5. Aktualisiere customers_with_late_fees.sql, um unsere definierten Quellen zu verwenden, anstelle von hartcodierten Werten
+5. Aktualisiere `customers_with_late_fees.sql`, um unsere definierten Quellen zu verwenden, anstelle von hartcodierten Werten
 
    ```sql
    WITH CTE AS (
