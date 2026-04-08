@@ -24,7 +24,7 @@
 
 5. Erstelle einen neuen Ordner "lego" im Verzeichnis "models" (`/models/lego`)
 
-6. Aktualisiere `dbt_project.yml` in den Zeilen 38–43, um alle Modelle im Verzeichnis "lego" standardmäßig als Tabellen zu materialisieren
+6. Aktualisiere `dbt_project.yml` in den Zeilen 38-43, um alle Modelle im Verzeichnis "lego" standardmäßig als Tabellen zu materialisieren
 
    ```yaml
    models:
@@ -124,7 +124,7 @@
 
     um alle Modelle im Verzeichnis "lego" in unserem Data Warehouse zu erstellen
 
-11. Erstelle eine neue Datei im Verzeichnis "lego" namens "\_sources.yml" ("/models/lego/\_sources.yml"), um dbt zu zeigen, wo sich die Quelltabellen befinden
+11. Erstelle eine neue Datei im Verzeichnis "lego" namens "\_sources.yml" ("/models/lego/\_sources.yml"), um dbt zu zeigen, wo sich die Quelltabellen befinden.
 
     ```yaml
     version: 2
@@ -172,86 +172,12 @@
     GROUP BY 1,2,3,4
     ```
 
-13. Erstelle eine neue Datei im Verzeichnis "lego" namens "unique_parts.sql" ("/models/lego/unique_parts.sql")
-
-14. Kopiere die Zeilen 2–9 aus "parts_per_set.sql" in "unique_parts.sql"
-
-    ```sql
-    SELECT
-        P.part_num
-    FROM {{ source('lego', 'parts') }} as P
-    INNER JOIN {{ source('lego', 'inventory_parts') }} as IP on P.part_num = IP.part_num
-    INNER JOIN {{ source('lego', 'inventories') }} as I on I.id = IP.inventory_id
-    INNER JOIN {{ source('lego', 'sets') }} as S on S.set_num = I.set_num
-        GROUP BY P.part_num
-        HAVING COUNT(*) = 1
-    ```
-
-15. Füge einen config-Block am Anfang von "unique_parts.sql" ein, um es als View im Data Warehouse zu materialisieren
-
-    ```sql
-    {{
-        config(
-            materialized='view'
-        )
-    }}
-
-    SELECT
-        P.part_num
-    FROM {{ source('lego', 'parts') }} as P
-    INNER JOIN {{ source('lego', 'inventory_parts') }} as IP on P.part_num = IP.part_num
-    INNER JOIN {{ source('lego', 'inventories') }} as I on I.id = IP.inventory_id
-    INNER JOIN {{ source('lego', 'sets') }} as S on S.set_num = I.set_num
-        GROUP BY P.part_num
-        HAVING COUNT(*) = 1
-    ```
-
-16. Aktualisiere "parts_per_set.sql" und ersetze den CTE (Zeilen 1–10) mit einer ref()-Funktion, die auf "unique_parts.sql" verweist
-
-    ```sql
-    WITH UNIQUE_PARTS AS (
-        SELECT *
-        from {{ ref('unique_parts') }}
-    )
-    SELECT
-        T.name as theme_name,
-        S.name as set_name,
-        S.year as set_year,
-        CASE
-            WHEN UP.part_num IS NULL THEN 'Not Unique'
-            ELSE 'Unique'
-        END as unique_part,
-        COUNT(P.part_num) as parts
-    FROM {{ source('lego', 'parts') }} as P
-    LEFT JOIN UNIQUE_PARTS as UP on P.part_num = UP.part_num
-    INNER JOIN {{ source('lego', 'inventory_parts') }} as IP on P.part_num = IP.part_num
-    INNER JOIN {{ source('lego', 'inventories') }} as I on I.id = IP.inventory_id
-    INNER JOIN {{ source('lego', 'sets') }} as S on S.set_num = I.set_num
-    INNER JOIN {{ source('lego', 'themes') }} as T on T.id = S.theme_id
-    GROUP BY 1,2,3,4
-    ```
-
-17. Führe den folgenden Befehl in der Befehlszeile aus
-
-    ```sh
-    dbt run --select lego
-    ```
-
-    um die beiden lego-Modelle nacheinander in unserem Data Warehouse zu erstellen
-
-18. Erstelle eine neue Datei im Verzeichnis "lego" namens "\_schema.yml" ("/models/lego/\_schema.yml"), um Dokumentation und Tests hinzuzufügen
+13. Erstelle eine neue Datei im Verzeichnis "lego" namens `_schema.yml` (`/models/lego/_schema.yml`) um Dokumentation und Tests hinzuzufügen.
 
     ```yml
     version: 2
 
     models:
-      - name: unique_parts
-        description: The part_nums which are only used in one set
-        columns:
-          - name: part_num
-            data_tests:
-              - not_null
-
       - name: parts_per_set
         description: Shows the number of parts in each set along with their theme and whether they have unique parts
         columns:
@@ -266,7 +192,7 @@
               - not_null
     ```
 
-19. Führe den folgenden Befehl in der Befehlszeile aus
+14. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt build
@@ -274,7 +200,7 @@
 
     um alle Modelle in unserem Data Warehouse zu erstellen und zu testen
 
-20. Führe den folgenden Befehl in der Befehlszeile aus
+15. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt test
@@ -282,48 +208,33 @@
 
     um alle Modelle zu testen
 
-21. Bearbeite die Datei "my_first_dbt_model.sql" im Verzeichnis "example" ("/models/example/my_first_dbt_model.sql") und entferne den Kommentar in Zeile 27
+16. Entferne das Verzeichnis mit den Standard-Beispielen (`/models/example`)
 
-    ```sql
+17. Entferne die Sektion `example` aus dem `models` Bereich in `dbt_project.yml`
 
-    /*
-        Welcome to your first dbt model!
-        Did you know that you can also configure models directly within SQL files?
-        This will override configurations stated in dbt_project.yml
+    ```yaml
+    models:
+      my_new_project:
+        lego:
+          +materialized: table
 
-        Try changing "table" to "view" below
-    */
-
-    {{ config(materialized='table') }}
-
-    with source_data as (
-
-        select 1 as id
-        union all
-        select null as id
-
-    )
-
-    select *
-    from source_data
-
-    /*
-        Uncomment the line below to remove records with null `id` values
-    */
-
-    where id is not null
-
+        library_loans:
+          +materialized: table
+          staging:
+            +materialized: view
+          intermediate:
+            +materialized: table
     ```
 
-22. Führe den folgenden Befehl in der Befehlszeile aus
+18. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt build
     ```
 
-    um alle Modelle in unserem Data Warehouse zu erstellen und zu testen. Alle sollten erfolgreich sein.
+    um alle Modelle in unserem Data Warehouse zu erstellen und zu testen. Alle sollten bestanden werden.
 
-23. Aktualisiere die Datei "\_sources.yml" im Verzeichnis "lego" ("/models/lego/\_sources.yml") und ersetze sie mit der fertigen Version aus der Dateifreigabe
+19. Aktualisiere die Datei "\_sources.yml" im Verzeichnis "lego" ("/models/lego/\_sources.yml") und ersetze sie mit der fertigen Version aus der Dateifreigabe
 
     ```yml
     version: 2
@@ -520,7 +431,7 @@
 
     Diese endgültige Version hat umfassende Beschreibungen der Quellen und ihrer Spalten. Sie verwendet auch alle 4 integrierten data_tests (not_null, unique, accepted_values, relationships)
 
-24. Führe den folgenden Befehl in der Befehlszeile aus
+20. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt build
@@ -528,7 +439,7 @@
 
     um alle unsere Modelle nacheinander im Data Warehouse zu erstellen und zu testen
 
-25. Führe den folgenden Befehl in der Befehlszeile aus
+21. Führe den folgenden Befehl in der Befehlszeile aus
 
     ```sh
     dbt docs generate
@@ -536,12 +447,12 @@
 
     um Dokumentation basierend auf den Modellen und YAML-Dateien in unserem Projekt zu generieren
 
-26. Klicke auf das kleine Dokumentsymbol, um die Dokumentation anzuzeigen
+22. Klicke auf das kleine Dokumentsymbol, um die Dokumentation anzuzeigen
 
     ![docs icon](../images/docs_icon.png)
 
-27. Klicke auf "Commit and sync" in der Versionskontrolle und gib eine Commit-Nachricht in das Dialogfeld ein
+23. Klicke auf "Commit and sync" in der Versionskontrolle und gib eine Commit-Nachricht in das Dialogfeld ein
 
     ![commit and sync](../images/commit_and_sync.png)
 
-## [Zurück zum Inhaltsverzeichnis](readme.md)
+### [Zurück zur Leitfadenliste](readme.md)
