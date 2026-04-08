@@ -172,86 +172,12 @@
     GROUP BY 1,2,3,4
     ```
 
-13. Create a new file in the lego directory called unique_parts.sql ("/models/lego/unique_parts.sql")
-
-14. Copy lines 2-9 from parts_per_set.sql into unique_parts.sql
-
-    ```sql
-    SELECT
-        P.part_num
-    FROM {{ source('lego', 'parts') }} as P
-    INNER JOIN {{ source('lego', 'inventory_parts') }} as IP on P.part_num = IP.part_num
-    INNER JOIN {{ source('lego', 'inventories') }} as I on I.id = IP.inventory_id
-    INNER JOIN {{ source('lego', 'sets') }} as S on S.set_num = I.set_num
-        GROUP BY P.part_num
-        HAVING COUNT(*) = 1
-    ```
-
-15. Add a config block to the top of unique_parts.sql to materialize it as a view in the data warehouse
-
-    ```sql
-    {{
-        config(
-            materialized='view'
-        )
-    }}
-
-    SELECT
-        P.part_num
-    FROM {{ source('lego', 'parts') }} as P
-    INNER JOIN {{ source('lego', 'inventory_parts') }} as IP on P.part_num = IP.part_num
-    INNER JOIN {{ source('lego', 'inventories') }} as I on I.id = IP.inventory_id
-    INNER JOIN {{ source('lego', 'sets') }} as S on S.set_num = I.set_num
-        GROUP BY P.part_num
-        HAVING COUNT(*) = 1
-    ```
-
-16. Update parts_per_set.sql to replace the CTE (lines 1-10) with a ref() function aimed at unique_parts.sql
-
-    ```sql
-    WITH UNIQUE_PARTS AS (
-        SELECT *
-        from {{ ref('unique_parts') }}
-    )
-    SELECT
-        T.name as theme_name,
-        S.name as set_name,
-        S.year as set_year,
-        CASE
-            WHEN UP.part_num IS NULL THEN 'Not Unique'
-            ELSE 'Unique'
-        END as unique_part,
-        COUNT(P.part_num) as parts
-    FROM {{ source('lego', 'parts') }} as P
-    LEFT JOIN UNIQUE_PARTS as UP on P.part_num = UP.part_num
-    INNER JOIN {{ source('lego', 'inventory_parts') }} as IP on P.part_num = IP.part_num
-    INNER JOIN {{ source('lego', 'inventories') }} as I on I.id = IP.inventory_id
-    INNER JOIN {{ source('lego', 'sets') }} as S on S.set_num = I.set_num
-    INNER JOIN {{ source('lego', 'themes') }} as T on T.id = S.theme_id
-    GROUP BY 1,2,3,4
-    ```
-
-17. In the command bar, run the command
-
-    ```sh
-    dbt run --select lego
-    ```
-
-    to create the two lego models sequentially in the data warehouse
-
-18. Create a new file within the lego directory called \_schema.yml ("/models/lego/\_schema.yml") to add in documentation and tests.
+13. Create a new file within the lego directory called `_schema.yml` (`/models/lego/_schema.yml`) to add in documentation and tests.
 
     ```yml
     version: 2
 
     models:
-      - name: unique_parts
-        description: The part_nums which are only used in one set
-        columns:
-          - name: part_num
-            data_tests:
-              - not_null
-
       - name: parts_per_set
         description: Shows the number of parts in each set along with their theme and whether they have unique parts
         columns:
@@ -266,7 +192,7 @@
               - not_null
     ```
 
-19. In the command bar, run the command
+14. In the command bar, run the command
 
     ```sh
     dbt build
@@ -274,7 +200,7 @@
 
     to create and test all models in our data warehouse
 
-20. In the command bar, run the command
+15. In the command bar, run the command
 
     ```sh
     dbt test
@@ -282,40 +208,25 @@
 
     to test all models
 
-21. Edit the my_first_dbt_model.sql file in the example directory ("/models/example/my_first_dbt_model.sql") to remove the comment on line 27
+16. Remove the directory with the default examples (`/models/example`)
 
-    ```sql
+17. Remove `example` section from the `models` section in `dbt_project.yml`
 
-    /*
-        Welcome to your first dbt model!
-        Did you know that you can also configure models directly within SQL files?
-        This will override configurations stated in dbt_project.yml
+    ```yaml
+    models:
+      my_new_project:
+        lego:
+          +materialized: table
 
-        Try changing "table" to "view" below
-    */
-
-    {{ config(materialized='table') }}
-
-    with source_data as (
-
-        select 1 as id
-        union all
-        select null as id
-
-    )
-
-    select *
-    from source_data
-
-    /*
-        Uncomment the line below to remove records with null `id` values
-    */
-
-    where id is not null
-
+        library_loans:
+          +materialized: table
+          staging:
+            +materialized: view
+          intermediate:
+            +materialized: table
     ```
 
-22. In the command bar, run the command
+18. In the command bar, run the command
 
     ```sh
     dbt build
@@ -323,7 +234,7 @@
 
     to create and test all models in our data warehouse. All should pass.
 
-23. Update the \_sources.yml file in the lego directory ("/models/lego/\_sources.yml") to paste in the completed version from the fileshare.
+19. Update the `_sources.yml` file in the lego directory (`/models/lego/_sources.yml`) to paste in the completed version.
 
     ```yml
     version: 2
@@ -520,7 +431,7 @@
 
     This completed version has full descriptions of sources and their columns. It also uses all 4 in-built data_tests (not_null, unique, accepted_values, relationships)
 
-24. In the command bar, run the command
+20. In the command bar, run the command
 
     ```sh
     dbt build
@@ -528,7 +439,7 @@
 
     to make and then test all our models sequentially in the data warehouse
 
-25. In the command bar, run the command
+21. In the command bar, run the command
 
     ```sh
     dbt docs generate
@@ -536,11 +447,11 @@
 
     to generate documentation based on the models and yaml files in our project
 
-26. Click the little document icon to see the documentation
+22. Click the little document icon to see the documentation
 
     ![docs icon](../images/docs_icon.png)
 
-27. Click "Commit and sync" in version control and enter a commit message in the dialogue box
+23. Click "Commit and sync" in version control and enter a commit message in the dialogue box
 
     ![commit and sync](../images/commit_and_sync.png)
 
