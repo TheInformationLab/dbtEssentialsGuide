@@ -1,4 +1,4 @@
-# dbt Essentials-Leitfaden
+# dbt Essentials Guide
 
 Dies sind unsere Schritt-für-Schritt-Anweisungen für das dbt essentials Training von The Information Lab
 
