@@ -31,7 +31,7 @@
    )
    SELECT
    member_name,
-   listagg(book_name::text, ',') as late_books,
+   listagg(book_name::text, ',') within group (order by book_name) as late_books,
    discount_applied,
    ROUND(SUM(fee_applied),2) as fee_to_pay
    FROM CTE
@@ -240,13 +240,13 @@
             data_tests:
               - not_null
               - unique
-      - name: stg_members
+      - name: int_members
         columns:
           - name: member_id
             data_tests:
               - not_null
               - unique
-          - name: membership_tiers
+          - name: membership_tier
             data_tests:
               - accepted_values:
                   arguments:
@@ -265,7 +265,7 @@
               - relationships:
                   arguments:
                     field: book_id
-                    to: ref('stg_books')
+                    to: ref('int_books')
           - name: member_id
             data_tests:
               - relationships:
