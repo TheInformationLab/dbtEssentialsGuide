@@ -79,21 +79,26 @@
 
    This will create our sources for dbt to reference
 
-9. Update `dbt_project.yml` to materialize everything in the `libary_loans/staging` sub directory as view:
+9. Create two sub directories in `/models/library_loans/`:
+   `staging` (`/models/library_loans/staging`) and
+   `intermediate` (`/models/library_loans/intermediate`)
 
-   ```yaml
-   models:
-     my_new_project:
-       lego:
-         +materialized: table
+10. Update the `models` part of `dbt_project.yml` to materialize staging models in `library_loans/staging` as view
+    and intermediate models in `library_loans/intermediate` as table:
 
-       library_loans:
-         +materialized: table
-         staging:
-           +materialized: view
-   ```
+    ```yaml
+    models:
+      my_new_project:
+        lego:
+          +materialized: table
 
-10. Create the `staging` sub directory in `/models/library_loans/` (`/models/library_loans/staging`)
+        library_loans:
+          +materialized: table
+          staging:
+            +materialized: view
+          intermediate:
+            +materialized: table
+    ```
 
 11. Create a staging model for every source inside the `staging` sub directory:
     - `stg_books_factual.sql` (`/models/libary_loans/staging/stg_books_factual.sql`)
@@ -120,25 +125,7 @@
       select * from {{ source('library', 'members') }}
       ```
 
-12. Update `dbt_project.yml` to materialize everything in `libary_loans/intermediate` as table:
-
-    ```yaml
-    models:
-      my_new_project:
-        lego:
-          +materialized: table
-
-        library_loans:
-          +materialized: table
-          staging:
-            +materialized: view
-          intermediate:
-            +materialized: table
-    ```
-
-13. Create a sub directory called `intermediate` under `library_loans`
-
-14. Create `int_books.sql` inside `intermediate` (`/models/libary_loans/intermediate/int_books.sql`):
+12. Create `int_books.sql` inside `intermediate` (`/models/libary_loans/intermediate/int_books.sql`):
 
     ```sql
     select
@@ -162,7 +149,7 @@
 
     This combines all books in a single model.
 
-15. Update `customers_with_late_fees` to use our new staging and intermediate models.
+13. Update `customers_with_late_fees` to use our new staging and intermediate models.
 
     ```sql
     WITH CTE AS (
@@ -191,7 +178,7 @@
         discount_applied
     ```
 
-16. Extract the CTE into a new `customer_withdrawals` model
+14. Extract the CTE into a new `customer_withdrawals` model
     - `models/library_loans/customer_withdrawals.sql`:
 
       ```sql
@@ -224,7 +211,7 @@
           discount_applied
       ```
 
-17. Create a `_schema.yml` inside `staging` (`models/library_loans/staging/_schema.yml`) with the staging tests:
+15. Create a `_schema.yml` inside `staging` (`models/library_loans/staging/_schema.yml`) with the staging tests:
 
     ```yaml
     models:
@@ -274,7 +261,7 @@
                     to: ref('stg_members')
     ```
 
-18. Create a `_schema.yml` inside `intermediate` (`models/library_loans/intermediate/_schema.yml`) with the staging tests:
+16. Create a `_schema.yml` inside `intermediate` (`models/library_loans/intermediate/_schema.yml`) with the staging tests:
 
     ```yaml
     models:
@@ -286,7 +273,7 @@
               - unique
     ```
 
-19. Update the `_schema.yml` in `library_loans` (`models/library_loans/_schema.yml`) and add the tests:
+17. Update the `_schema.yml` in `library_loans` (`models/library_loans/_schema.yml`) and add the tests:
 
     ```yaml
     models:
@@ -312,19 +299,19 @@
                 compare_model: ref('legacy_customers_with_late_fees')
     ```
 
-20. Update `stg_books_fictional.sql` to remove the duplicates:
+18. Update `stg_books_fictional.sql` to remove the duplicates:
 
     ```sql
     select distinct * from {{ source('library', 'books_fictional') }}
     ```
 
-21. Do the same as a precaution in `stg_books_factual.sql`:
+19. Do the same as a precaution in `stg_books_factual.sql`:
 
     ```sql
     select distinct * from {{ source('library', 'books_factual') }}
     ```
 
-22. Add a WHERE clause to `stg_members.sql` to filter out rows with invalid membership tiers:
+20. Add a WHERE clause to `stg_members.sql` to filter out rows with invalid membership tiers:
 
     ```sql
     select *
@@ -333,7 +320,7 @@
         membership_tier in ('Bronze', 'Silver', 'Gold')
     ```
 
-23. Update `stg_loans.sql` to filter out rows with invalid relations:
+21. Update `stg_loans.sql` to filter out rows with invalid relations:
 
     ```sql
     select *

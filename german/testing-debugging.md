@@ -79,21 +79,25 @@
 
    Dies erstellt die Quellen, auf die dbt verweisen kann
 
-9. Aktualisiere `dbt_project.yml`, um alles im `libary_loans/staging`-Unterverzeichnis als View zu materialisieren:
+9. Erstelle zwei Unterverzeichnisse in `/models/library_loans/`:
+   `staging` (`/models/library_loans/staging`) und
+   `intermediate` (`/models/library_loans/intermediate`)
 
-   ```yaml
-   models:
-     my_new_project:
-       lego:
-         +materialized: table
+10. Aktualisiere den `models`-Teil von `dbt_project.yml`, um Staging-Modelle in `library_loans/staging` als View und Intermediate-Modelle in `library_loans/intermediate` als Tabelle zu materialisieren:
 
-       library_loans:
-         +materialized: table
-         staging:
-           +materialized: view
-   ```
+    ```yaml
+    models:
+      my_new_project:
+        lego:
+          +materialized: table
 
-10. Erstelle das `staging`-Unterverzeichnis in `/models/library_loans/` (`/models/library_loans/staging`)
+        library_loans:
+          +materialized: table
+          staging:
+            +materialized: view
+          intermediate:
+            +materialized: table
+    ```
 
 11. Erstelle für jede Quelle im `staging`-Unterverzeichnis ein Staging-Modell:
     - `stg_books_factual.sql` (`/models/libary_loans/staging/stg_books_factual.sql`)
@@ -120,25 +124,7 @@
       select * from {{ source('library', 'members') }}
       ```
 
-12. Aktualisiere `dbt_project.yml`, um alles in `libary_loans/intermediate` als Tabelle zu materialisieren:
-
-    ```yaml
-    models:
-      my_new_project:
-        lego:
-          +materialized: table
-
-        library_loans:
-          +materialized: table
-          staging:
-            +materialized: view
-          intermediate:
-            +materialized: table
-    ```
-
-13. Erstelle ein Unterverzeichnis namens `intermediate` unter `library_loans`
-
-14. Erstelle `int_books.sql` im `intermediate`-Verzeichnis (`/models/libary_loans/intermediate/int_books.sql`):
+12. Erstelle `int_books.sql` im `intermediate`-Verzeichnis (`/models/libary_loans/intermediate/int_books.sql`):
 
     ```sql
     select
@@ -162,7 +148,7 @@
 
     Dies kombiniert alle Bücher in einem einzelnen Modell.
 
-15. Aktualisiere `customers_with_late_fees`, um unsere neuen Staging- und Intermediate-Modelle zu verwenden.
+13. Aktualisiere `customers_with_late_fees`, um unsere neuen Staging- und Intermediate-Modelle zu verwenden.
 
     ```sql
     WITH CTE AS (
@@ -191,7 +177,7 @@
         discount_applied
     ```
 
-16. Extrahiere die CTE in ein neues `customer_withdrawals`-Modell
+14. Extrahiere die CTE in ein neues `customer_withdrawals`-Modell
     - `models/library_loans/customer_withdrawals.sql`:
 
       ```sql
@@ -224,7 +210,7 @@
           discount_applied
       ```
 
-17. Erstelle eine `_schema.yml` im `staging`-Verzeichnis (`models/library_loans/staging/_schema.yml`) mit den Staging-Tests:
+15. Erstelle eine `_schema.yml` im `staging`-Verzeichnis (`models/library_loans/staging/_schema.yml`) mit den Staging-Tests:
 
     ```yaml
     models:
@@ -274,7 +260,7 @@
                     to: ref('stg_members')
     ```
 
-18. Erstelle eine `_schema.yml` im `intermediate`-Verzeichnis (`models/library_loans/intermediate/_schema.yml`) mit den Intermediate-Tests:
+16. Erstelle eine `_schema.yml` im `intermediate`-Verzeichnis (`models/library_loans/intermediate/_schema.yml`) mit den Intermediate-Tests:
 
     ```yaml
     models:
@@ -286,7 +272,7 @@
               - unique
     ```
 
-19. Aktualisiere die `_schema.yml` im `library_loans`-Verzeichnis (`models/library_loans/_schema.yml`) und füge die Tests hinzu:
+17. Aktualisiere die `_schema.yml` im `library_loans`-Verzeichnis (`models/library_loans/_schema.yml`) und füge die Tests hinzu:
 
     ```yaml
     models:
@@ -312,19 +298,19 @@
                 compare_model: ref('legacy_customers_with_late_fees')
     ```
 
-20. Aktualisiere `stg_books_fictional.sql`, um die Duplikate zu entfernen:
+18. Aktualisiere `stg_books_fictional.sql`, um die Duplikate zu entfernen:
 
     ```sql
     select distinct * from {{ source('library', 'books_fictional') }}
     ```
 
-21. Mache dasselbe vorsorglich in `stg_books_factual.sql`:
+19. Mache das gleiche vorsorglich in `stg_books_factual.sql`:
 
     ```sql
     select distinct * from {{ source('library', 'books_factual') }}
     ```
 
-22. Füge eine WHERE-Klausel zu `stg_members.sql` hinzu, um Zeilen mit ungültigen Mitgliedschaftsstufen zu filtern:
+20. Füge eine WHERE-Klausel zu `stg_members.sql` hinzu, um Zeilen mit ungültigen Mitgliedschaftsstufen zu filtern:
 
     ```sql
     select *
@@ -333,7 +319,7 @@
         membership_tier in ('Bronze', 'Silver', 'Gold')
     ```
 
-23. Aktualisiere `stg_loans.sql`, um Zeilen mit ungültigen Beziehungen zu filtern:
+21. Aktualisiere `stg_loans.sql`, um Zeilen mit ungültigen Beziehungen zu filtern:
 
     ```sql
     select *
