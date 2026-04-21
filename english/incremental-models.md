@@ -204,4 +204,4 @@
 
     To make the all_weather_data model in the data warehouse. Now you should not see the incremental where clause in the logs.
 
-### [Back to guide list](../ReadMe.md)
+### [Back to guide list](./readme.md)

@@ -816,4 +816,4 @@ sources:
 
     To make and test all the library_loans models. All tests should pass
 
-### [Back to guide list](../ReadMe.md)
+### [Back to guide list](./readme.md)

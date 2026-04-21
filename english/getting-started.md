@@ -544,4 +544,4 @@
 
     ![commit and sync](../images/commit_and_sync.png)
 
-### [Back to guide list](../ReadMe.md)
+### [Back to guide list](./readme.md)
