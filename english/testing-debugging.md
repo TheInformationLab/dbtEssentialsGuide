@@ -717,13 +717,15 @@ sources:
     - name: customers_with_late_fees
       data_tests:
         - dbt_utils.equal_rowcount:
-            compare_model: ref('solution')
+            arguments: 
+              compare_model: ref('solution')
       columns:
         - name: discount_applied
           data_tests:
             - dbt_utils.accepted_range:
-                min_value: 0
-                max_value: 0.25
+                arguments:
+                  min_value: 0
+                  max_value: 0.25
     ```
 
     <details>
@@ -786,13 +788,15 @@ sources:
       - name: customers_with_late_fees
         data_tests:
           - dbt_utils.equal_rowcount:
-              compare_model: ref('solution')
+              arguments:
+                compare_model: ref('solution')
         columns:
           - name: discount_applied
             data_tests:
               - dbt_utils.accepted_range:
-                  min_value: 0
-                  max_value: 0.25
+                  arguments:
+                    min_value: 0
+                    max_value: 0.25
 
     seeds:
       - name: solution
